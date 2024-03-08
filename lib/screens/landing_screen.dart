@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:smart_waste_mobile/screens/user_login_screen.dart';
 import 'package:smart_waste_mobile/utlis/colors.dart';
 import 'package:smart_waste_mobile/widgets/button_widget.dart';
 import 'package:smart_waste_mobile/widgets/text_widget.dart';
+
+import 'home_screen.dart';
 
 class LandingScreen extends StatelessWidget {
   const LandingScreen({super.key});
@@ -50,8 +51,8 @@ class LandingScreen extends StatelessWidget {
                 fontSize: 18,
                 label: 'Get Started',
                 onPressed: () {
-                  Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => const UserLoginScreen()));
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => const HomeScreen()));
                 },
               ),
             ],

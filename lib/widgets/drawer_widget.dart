@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:smart_waste_mobile/screens/notif_screen.dart';
 import 'package:smart_waste_mobile/widgets/text_widget.dart';
 
 import '../screens/home_screen.dart';
@@ -52,7 +53,7 @@ class DrawerWidget extends StatelessWidget {
               ),
               onTap: () {
                 Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (context) => const HomeScreen()));
+                    builder: (context) => const NotifScreen()));
               },
               title: TextWidget(
                 text: 'Notifications/Announcements',

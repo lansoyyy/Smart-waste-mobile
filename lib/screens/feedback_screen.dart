@@ -112,6 +112,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                 height: 20,
               ),
               TextFieldWidget(
+                borderColor: Colors.black,
                 width: 500,
                 controller: nameController,
                 label: 'Name',
@@ -120,6 +121,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                 height: 10,
               ),
               TextFieldWidget(
+                borderColor: Colors.black,
                 width: 500,
                 controller: emailController,
                 label: 'Email',
@@ -128,6 +130,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                 height: 10,
               ),
               TextFieldWidget(
+                borderColor: Colors.black,
                 width: 500,
                 controller: messageController,
                 label: 'Message',

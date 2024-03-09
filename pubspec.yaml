@@ -41,6 +41,7 @@ dependencies:
   firebase_auth:
   fluttertoast:
   get_storage:
+  google_maps_flutter:
 
 dev_dependencies:
   flutter_test:

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smart_waste_mobile/utlis/colors.dart';
+import 'package:smart_waste_mobile/widgets/drawer_widget.dart';
 
 import '../widgets/text_widget.dart';
 
@@ -10,6 +11,7 @@ class AboutUsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: background,
+      endDrawer: const DrawerWidget(),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
         child: Stack(

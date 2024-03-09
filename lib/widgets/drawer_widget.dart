@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:smart_waste_mobile/screens/aboutus_screen.dart';
+import 'package:smart_waste_mobile/screens/feedback_screen.dart';
 import 'package:smart_waste_mobile/screens/notif_screen.dart';
 import 'package:smart_waste_mobile/widgets/text_widget.dart';
 
@@ -86,7 +87,7 @@ class DrawerWidget extends StatelessWidget {
               ),
               onTap: () {
                 Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (context) => const HomeScreen()));
+                    builder: (context) => const FeedbackScreen()));
               },
               title: TextWidget(
                 text: 'Feedback',

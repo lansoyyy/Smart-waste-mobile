@@ -3,8 +3,8 @@ import 'package:smart_waste_mobile/utlis/colors.dart';
 import 'package:smart_waste_mobile/widgets/drawer_widget.dart';
 import 'package:smart_waste_mobile/widgets/text_widget.dart';
 
-class NotifScreen extends StatelessWidget {
-  const NotifScreen({super.key});
+class AnnouncementScreen extends StatelessWidget {
+  const AnnouncementScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +85,7 @@ class NotifScreen extends StatelessWidget {
                       height: 5,
                     ),
                     TextWidget(
-                      text: 'Notifications',
+                      text: 'Announcements',
                       fontSize: 14,
                       color: Colors.black,
                       fontFamily: 'Bold',
@@ -101,7 +101,7 @@ class NotifScreen extends StatelessWidget {
                             leading: const Icon(Icons.notifications),
                             title: TextWidget(
                                 text:
-                                    'GT 1 has Arrived in your location in 5:00am ',
+                                    'GT 1 has Arrived in your location in 8:00am ',
                                 fontSize: 14),
                           );
                         },

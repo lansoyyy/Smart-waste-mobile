@@ -2,7 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:smart_waste_mobile/screens/notif_screen.dart';
 import 'package:smart_waste_mobile/utlis/colors.dart';
+import 'package:smart_waste_mobile/widgets/button_widget.dart';
 import 'package:smart_waste_mobile/widgets/drawer_widget.dart';
 import 'package:smart_waste_mobile/widgets/text_widget.dart';
 
@@ -39,8 +41,14 @@ class _HomeScreenState extends State<HomeScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(
-                  width: 50,
+                IconButton(
+                  onPressed: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => const NotifScreen()));
+                  },
+                  icon: const Icon(
+                    Icons.notifications,
+                  ),
                 ),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -85,12 +93,65 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(
               height: 10,
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 25,
+                      height: 25,
+                      color: Colors.blue,
+                    ),
+                    TextWidget(
+                      text: 'Routes',
+                      fontSize: 14,
+                    ),
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 25,
+                      height: 25,
+                      color: Colors.black,
+                    ),
+                    TextWidget(
+                      text: 'Drop point',
+                      fontSize: 14,
+                    ),
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 25,
+                      height: 25,
+                      color: Colors.red,
+                    ),
+                    TextWidget(
+                      text: 'Missed',
+                      fontSize: 14,
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 10,
+            ),
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(15),
               ),
               width: 400,
-              height: 390,
+              height: 250,
               child: GoogleMap(
                 mapType: MapType.normal,
                 initialCameraPosition: _kGooglePlex,
@@ -98,6 +159,15 @@ class _HomeScreenState extends State<HomeScreen> {
                   _controller.complete(controller);
                 },
               ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            ButtonWidget(
+              radius: 15,
+              color: Colors.green,
+              label: 'Track GT',
+              onPressed: () {},
             ),
           ],
         ),

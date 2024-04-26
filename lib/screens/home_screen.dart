@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:smart_waste_mobile/screens/announcement_screen.dart';
 import 'package:smart_waste_mobile/screens/notif_screen.dart';
 import 'package:smart_waste_mobile/utlis/colors.dart';
 import 'package:smart_waste_mobile/widgets/button_widget.dart';
@@ -43,11 +44,11 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 IconButton(
                   onPressed: () {
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => const NotifScreen()));
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (context) => const AnnouncementScreen()));
                   },
                   icon: const Icon(
-                    Icons.notifications,
+                    Icons.campaign_outlined,
                   ),
                 ),
                 Column(
@@ -118,7 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Container(
                       width: 25,
                       height: 25,
-                      color: Colors.black,
+                      color: Colors.green,
                     ),
                     TextWidget(
                       text: 'Drop point',

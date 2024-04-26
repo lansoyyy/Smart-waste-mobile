@@ -55,11 +55,11 @@ class DrawerWidget extends StatelessWidget {
                 color: Colors.white,
               ),
               onTap: () {
-                Navigator.of(context).pushReplacement(MaterialPageRoute(
-                    builder: (context) => const AnnouncementScreen()));
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const NotifScreen()));
               },
               title: TextWidget(
-                text: 'Announcements',
+                text: 'Notifications',
                 fontSize: 14,
                 fontFamily: 'Bold',
                 color: Colors.white,

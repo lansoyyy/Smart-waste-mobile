@@ -42,6 +42,10 @@ dependencies:
   fluttertoast:
   get_storage:
   google_maps_flutter:
+  flutter_map:
+  qr_code_scanner: ^1.0.0
+  flutter_barcode_scanner:
+  qr_flutter:
 
 dev_dependencies:
   flutter_test:

@@ -46,6 +46,7 @@ dependencies:
   qr_code_scanner: ^1.0.0
   flutter_barcode_scanner:
   qr_flutter:
+  intl:
 
 dev_dependencies:
   flutter_test:

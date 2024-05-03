@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:smart_waste_mobile/utlis/colors.dart';
 import 'package:smart_waste_mobile/widgets/drawer_widget.dart';
 import 'package:smart_waste_mobile/widgets/text_widget.dart';
@@ -93,20 +95,46 @@ class AnnouncementScreen extends StatelessWidget {
                     const SizedBox(
                       height: 5,
                     ),
-                    SizedBox(
-                      height: 370,
-                      child: ListView.builder(
-                        itemBuilder: (context, index) {
-                          return ListTile(
-                            leading: const Icon(Icons.notifications),
-                            title: TextWidget(
-                                text:
-                                    'GT 1 has Arrived in your location in 8:00am ',
-                                fontSize: 14),
+                    StreamBuilder<QuerySnapshot>(
+                        stream: FirebaseFirestore.instance
+                            .collection('Announcements')
+                            .orderBy('postedAt', descending: true)
+                            .snapshots(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<QuerySnapshot> snapshot) {
+                          if (snapshot.hasError) {
+                            print(snapshot.error);
+                            return const Center(child: Text('Error'));
+                          }
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Padding(
+                              padding: EdgeInsets.only(top: 50),
+                              child: Center(
+                                child: CircularProgressIndicator(
+                                  color: Colors.black,
+                                ),
+                              ),
+                            );
+                          }
+
+                          final data = snapshot.requireData;
+                          return SizedBox(
+                            height: 370,
+                            child: ListView.builder(
+                              itemCount: data.docs.length,
+                              itemBuilder: (context, index) {
+                                return ListTile(
+                                  leading: const Icon(Icons.notifications),
+                                  title: TextWidget(
+                                      text:
+                                          '${data.docs[index]['announcement']} ${DateFormat.yMMMd().add_jm().format(data.docs[index]['postedAt'].toDate())}',
+                                      fontSize: 14),
+                                );
+                              },
+                            ),
                           );
-                        },
-                      ),
-                    ),
+                        }),
                   ],
                 ),
               ),

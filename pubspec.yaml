@@ -47,6 +47,7 @@ dependencies:
   flutter_barcode_scanner:
   qr_flutter:
   intl:
+  firebase_database:
 
 dev_dependencies:
   flutter_test:

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:smart_waste_mobile/screens/announcement_screen.dart';
@@ -20,10 +21,6 @@ class _HomeScreenState extends State<HomeScreen> {
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
 
-  static const CameraPosition _kGooglePlex = CameraPosition(
-    target: LatLng(37.42796133580664, -122.085749655962),
-    zoom: 14.4746,
-  );
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -147,20 +144,58 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(
               height: 10,
             ),
-            Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
-              ),
-              width: 400,
-              height: 250,
-              child: GoogleMap(
-                mapType: MapType.normal,
-                initialCameraPosition: _kGooglePlex,
-                onMapCreated: (GoogleMapController controller) {
-                  _controller.complete(controller);
-                },
-              ),
-            ),
+            StreamBuilder<DatabaseEvent>(
+                stream: FirebaseDatabase.instance.ref().onValue,
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    print(snapshot.error);
+                    return const Center(child: Text('Error'));
+                  }
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Padding(
+                      padding: EdgeInsets.only(top: 50),
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          color: Colors.black,
+                        ),
+                      ),
+                    );
+                  }
+                  final dynamic data = snapshot.data!.snapshot.value;
+
+                  return Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    width: 400,
+                    height: 250,
+                    child: GoogleMap(
+                      markers: {
+                        Marker(
+                          position: LatLng(
+                              double.parse(
+                                  data['NODES']['Truck-01']['latitude']),
+                              double.parse(
+                                  data['NODES']['Truck-01']['longitude'])),
+                          markerId: MarkerId(
+                            data['NODES']['Truck-01']['timestamp'].toString(),
+                          ),
+                        ),
+                      },
+                      mapType: MapType.normal,
+                      initialCameraPosition: CameraPosition(
+                        target: LatLng(
+                            double.parse(data['NODES']['Truck-01']['latitude']),
+                            double.parse(
+                                data['NODES']['Truck-01']['longitude'])),
+                        zoom: 14.4746,
+                      ),
+                      onMapCreated: (GoogleMapController controller) {
+                        _controller.complete(controller);
+                      },
+                    ),
+                  );
+                }),
             const SizedBox(
               height: 20,
             ),

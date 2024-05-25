@@ -21,6 +21,8 @@ class _HomeScreenState extends State<HomeScreen> {
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
 
+  GoogleMapController? mapController;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -163,48 +165,108 @@ class _HomeScreenState extends State<HomeScreen> {
                   }
                   final dynamic data = snapshot.data!.snapshot.value;
 
-                  return Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    width: 400,
-                    height: 250,
-                    child: GoogleMap(
-                      markers: {
-                        Marker(
-                          position: LatLng(
-                              double.parse(
-                                  data['NODES']['Truck-01']['latitude']),
-                              double.parse(
-                                  data['NODES']['Truck-01']['longitude'])),
-                          markerId: MarkerId(
-                            data['NODES']['Truck-01']['timestamp'].toString(),
-                          ),
+                  return Column(
+                    children: [
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15),
                         ),
-                      },
-                      mapType: MapType.normal,
-                      initialCameraPosition: CameraPosition(
-                        target: LatLng(
-                            double.parse(data['NODES']['Truck-01']['latitude']),
-                            double.parse(
-                                data['NODES']['Truck-01']['longitude'])),
-                        zoom: 14.4746,
+                        width: 400,
+                        height: 250,
+                        child: GoogleMap(
+                          markers: {
+                            Marker(
+                              position: LatLng(
+                                  double.parse(data['NODES']['Truck-01']
+                                          ['current']
+                                      .first
+                                      .toString()
+                                      .split(',')[0]),
+                                  double.parse(data['NODES']['Truck-01']
+                                          ['current']
+                                      .first
+                                      .toString()
+                                      .split(',')[1])),
+                              markerId: const MarkerId(
+                                'Marker',
+                              ),
+                            ),
+                          },
+                          polylines: {
+                            Polyline(
+                              color: Colors.blue,
+                              width: 5,
+                              points: [
+                                for (int i = 0;
+                                    i <
+                                        data['NODES']['Truck-01']['current']
+                                            .length;
+                                    i++)
+                                  LatLng(
+                                      double.parse(data['NODES']['Truck-01']
+                                              ['current'][i]
+                                          .toString()
+                                          .split(',')[0]),
+                                      double.parse(data['NODES']['Truck-01']
+                                              ['current'][i]
+                                          .toString()
+                                          .split(',')[1])),
+                              ],
+                              polylineId: const PolylineId(
+                                'Location',
+                              ),
+                            ),
+                          },
+                          mapType: MapType.normal,
+                          initialCameraPosition: CameraPosition(
+                            target: LatLng(
+                                double.parse(data['NODES']['Truck-01']
+                                        ['current']
+                                    .first
+                                    .toString()
+                                    .split(',')[0]),
+                                double.parse(data['NODES']['Truck-01']
+                                        ['current']
+                                    .first
+                                    .toString()
+                                    .split(',')[1])),
+                            zoom: 14.4746,
+                          ),
+                          onMapCreated: (GoogleMapController controller) {
+                            _controller.complete(controller);
+                            setState(() {
+                              mapController = controller;
+                            });
+                          },
+                        ),
                       ),
-                      onMapCreated: (GoogleMapController controller) {
-                        _controller.complete(controller);
-                      },
-                    ),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      ButtonWidget(
+                        radius: 15,
+                        color: Colors.green,
+                        label: 'Track GT',
+                        onPressed: () {
+                          mapController!.animateCamera(
+                              CameraUpdate.newLatLngZoom(
+                                  LatLng(
+                                      double.parse(data['NODES']['Truck-01']
+                                              ['current']
+                                          .first
+                                          .toString()
+                                          .split(',')[0]),
+                                      double.parse(data['NODES']['Truck-01']
+                                              ['current']
+                                          .first
+                                          .toString()
+                                          .split(',')[1])),
+                                  18.0));
+                        },
+                      ),
+                    ],
                   );
                 }),
-            const SizedBox(
-              height: 20,
-            ),
-            ButtonWidget(
-              radius: 15,
-              color: Colors.green,
-              label: 'Track GT',
-              onPressed: () {},
-            ),
           ],
         ),
       ),

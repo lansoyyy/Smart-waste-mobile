@@ -97,8 +97,8 @@ class NotifScreen extends StatelessWidget {
                     ),
                     StreamBuilder<QuerySnapshot>(
                         stream: FirebaseFirestore.instance
-                            .collection('Announcements')
-                            .orderBy('postedAt', descending: true)
+                            .collection('Schedules')
+                            .orderBy('addedAt', descending: true)
                             .snapshots(),
                         builder: (BuildContext context,
                             AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -128,7 +128,7 @@ class NotifScreen extends StatelessWidget {
                                   leading: const Icon(Icons.notifications),
                                   title: TextWidget(
                                       text:
-                                          '${data.docs[index]['announcement']} ${DateFormat.yMMMd().add_jm().format(data.docs[index]['postedAt'].toDate())}',
+                                          'Location: ${data.docs[index]['location']} Day: ${data.docs[index]['day']}',
                                       fontSize: 14),
                                 );
                               },

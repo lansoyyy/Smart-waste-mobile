@@ -93,56 +93,6 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(
               height: 10,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 25,
-                      height: 25,
-                      color: Colors.blue,
-                    ),
-                    TextWidget(
-                      text: 'Routes',
-                      fontSize: 14,
-                    ),
-                  ],
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 25,
-                      height: 25,
-                      color: Colors.green,
-                    ),
-                    TextWidget(
-                      text: 'Drop point',
-                      fontSize: 14,
-                    ),
-                  ],
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 25,
-                      height: 25,
-                      color: Colors.red,
-                    ),
-                    TextWidget(
-                      text: 'Missed',
-                      fontSize: 14,
-                    ),
-                  ],
-                ),
-              ],
-            ),
             const SizedBox(
               height: 10,
             ),
@@ -171,8 +121,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(15),
                         ),
-                        width: 400,
-                        height: 250,
+                        width: double.infinity,
+                        height: 350,
                         child: GoogleMap(
                           markers: {
                             Marker(

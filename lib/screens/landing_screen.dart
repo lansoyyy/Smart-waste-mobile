@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:smart_waste_mobile/utlis/colors.dart';
 import 'package:smart_waste_mobile/widgets/button_widget.dart';
 import 'package:smart_waste_mobile/widgets/text_widget.dart';
 
 import 'home_screen.dart';
 
-class LandingScreen extends StatelessWidget {
+class LandingScreen extends StatefulWidget {
   const LandingScreen({super.key});
 
+  @override
+  State<LandingScreen> createState() => _LandingScreenState();
+}
+
+class _LandingScreenState extends State<LandingScreen> {
+  final box = GetStorage();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -51,6 +58,9 @@ class LandingScreen extends StatelessWidget {
                 fontSize: 18,
                 label: 'Get Started',
                 onPressed: () {
+                  box.write('started', true);
+
+                  print(box.read('started'));
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
                       builder: (context) => const HomeScreen()));
                 },

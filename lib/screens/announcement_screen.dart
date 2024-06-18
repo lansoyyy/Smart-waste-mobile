@@ -127,6 +127,7 @@ class AnnouncementScreen extends StatelessWidget {
                                 return ListTile(
                                   leading: const Icon(Icons.notifications),
                                   title: TextWidget(
+                                      align: TextAlign.start,
                                       text:
                                           '${data.docs[index]['announcement']} ${DateFormat.yMMMd().add_jm().format(data.docs[index]['postedAt'].toDate())}',
                                       fontSize: 14),

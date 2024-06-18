@@ -39,9 +39,8 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Image.asset(
-                    'assets/images/LOGO 1.png',
-                    height: 50,
+                  const SizedBox(
+                    width: 50,
                   ),
                   TextWidget(
                     text: 'Smart Solid\nWaste Collector',

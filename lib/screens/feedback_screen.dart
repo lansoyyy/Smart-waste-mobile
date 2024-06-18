@@ -1,9 +1,14 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:smart_waste_mobile/utlis/colors.dart';
 import 'package:smart_waste_mobile/widgets/button_widget.dart';
 import 'package:smart_waste_mobile/widgets/drawer_widget.dart';
 import 'package:smart_waste_mobile/widgets/textfield_widget.dart';
-
+import 'package:smart_waste_mobile/widgets/toast_widget.dart';
+import 'package:path/path.dart' as path;
 import '../widgets/text_widget.dart';
 import 'home_screen.dart';
 
@@ -20,6 +25,8 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
   final messageController = TextEditingController();
 
   bool ischecked = false;
+
+  List images = [];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -136,6 +143,44 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                 maxLine: 10,
                 height: 150,
               ),
+              const SizedBox(
+                height: 10,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TextWidget(
+                    text: 'Upload Images',
+                    fontSize: 14,
+                  ),
+                  IconButton(
+                    onPressed: () {
+                      uploadPicture('gallery');
+                    },
+                    icon: const Icon(
+                      Icons.upload,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 100,
+                width: double.infinity,
+                child: ListView.builder(
+                  itemCount: images.length,
+                  itemBuilder: (context, index) {
+                    return Card(
+                      child: ListTile(
+                        leading: TextWidget(
+                          color: Colors.black,
+                          text: images[index],
+                          fontSize: 18,
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
               Row(
                 children: [
                   IconButton(
@@ -230,5 +275,62 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
         );
       },
     );
+  }
+
+  late String fileName = '';
+
+  late File imageFile;
+
+  late String imageURL = '';
+  Future<void> uploadPicture(String inputSource) async {
+    final picker = ImagePicker();
+    XFile pickedImage;
+
+    pickedImage = (await picker.pickImage(
+        source:
+            inputSource == 'camera' ? ImageSource.camera : ImageSource.gallery,
+        maxWidth: 1920))!;
+
+    fileName = path.basename(pickedImage.path);
+    imageFile = File(pickedImage.path);
+
+    try {
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (BuildContext context) => const Padding(
+          padding: EdgeInsets.only(left: 30, right: 30),
+          child: AlertDialog(
+              title: Row(
+            children: [
+              CircularProgressIndicator(
+                color: Colors.black,
+              ),
+              SizedBox(
+                width: 20,
+              ),
+              Text(
+                'Loading . . .',
+                style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'QRegular'),
+              ),
+            ],
+          )),
+        ),
+      );
+
+      setState(() {
+        images.add(fileName);
+      });
+
+      Navigator.of(context).pop();
+      showToast('Image uploaded!');
+    } catch (err) {
+      if (kDebugMode) {
+        print(err);
+      }
+    }
   }
 }

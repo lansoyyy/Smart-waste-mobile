@@ -48,6 +48,7 @@ dependencies:
   qr_flutter:
   intl:
   firebase_database:
+  image_picker:
 
 dev_dependencies:
   flutter_test:

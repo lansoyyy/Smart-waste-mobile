@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:smart_waste_mobile/services/add_feedback.dart';
 import 'package:smart_waste_mobile/utlis/colors.dart';
 import 'package:smart_waste_mobile/widgets/button_widget.dart';
 import 'package:smart_waste_mobile/widgets/drawer_widget.dart';
@@ -11,6 +12,7 @@ import 'package:smart_waste_mobile/widgets/toast_widget.dart';
 import 'package:path/path.dart' as path;
 import '../widgets/text_widget.dart';
 import 'home_screen.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class FeedbackScreen extends StatefulWidget {
   const FeedbackScreen({super.key});
@@ -216,6 +218,8 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                   color: primary,
                   label: 'Submit',
                   onPressed: () {
+                    addFeedback(emailController.text, messageController.text,
+                        nameController.text, images);
                     showSubmittedDialog();
                   },
                 ),
@@ -321,8 +325,15 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
         ),
       );
 
+      await firebase_storage.FirebaseStorage.instance
+          .ref('Pictures/$fileName')
+          .putFile(imageFile);
+      imageURL = await firebase_storage.FirebaseStorage.instance
+          .ref('Pictures/$fileName')
+          .getDownloadURL();
+
       setState(() {
-        images.add(fileName);
+        images.add(imageURL);
       });
 
       Navigator.of(context).pop();

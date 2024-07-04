@@ -147,20 +147,25 @@ class _HomeScreenState extends State<HomeScreen> {
                               color: Colors.blue,
                               width: 5,
                               points: [
-                                for (int i = 0;
-                                    i <
-                                        data['NODES']['Truck-01']['current']
-                                            .length;
-                                    i++)
-                                  LatLng(
-                                      double.parse(data['NODES']['Truck-01']
-                                              ['current'][i]
-                                          .toString()
-                                          .split(',')[0]),
-                                      double.parse(data['NODES']['Truck-01']
-                                              ['current'][i]
-                                          .toString()
-                                          .split(',')[1])),
+                                for (int i = 0; i < data['NODES']['Truck-01']['current'].length; i++)
+                                  data['NODES']['Truck-01']['current'][i] == null
+                                      ? LatLng(
+                                          double.parse(data['NODES']['Truck-01']
+                                                  ['current']
+                                              .first
+                                              .toString()
+                                              .split(',')[0]),
+                                          double.parse(data['NODES']['Truck-01']
+                                                  ['current']
+                                              .first
+                                              .toString()
+                                              .split(',')[1]))
+                                      : LatLng(
+                                          double.parse(data['NODES']['Truck-01']
+                                                  ['current'][i]
+                                              .toString()
+                                              .split(',')[0]),
+                                          double.parse(data['NODES']['Truck-01']['current'][i].toString().split(',')[1])),
                               ],
                               polylineId: const PolylineId(
                                 'Location',

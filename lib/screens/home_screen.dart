@@ -2,10 +2,13 @@ import 'dart:async';
 
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:smart_waste_mobile/screens/announcement_screen.dart';
 import 'package:smart_waste_mobile/screens/notif_screen.dart';
 import 'package:smart_waste_mobile/utlis/colors.dart';
+import 'package:smart_waste_mobile/utlis/distance_calculations.dart';
 import 'package:smart_waste_mobile/widgets/button_widget.dart';
 import 'package:smart_waste_mobile/widgets/drawer_widget.dart';
 import 'package:smart_waste_mobile/widgets/text_widget.dart';
@@ -18,6 +21,32 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getLocation();
+  }
+
+  bool hasLoaded = false;
+  double lat = 0;
+  double lng = 0;
+
+  getLocation() async {
+    determinePosition();
+    await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.best)
+        .then((position) async {
+      setState(() {
+        lat = position.latitude;
+        lng = position.longitude;
+        hasLoaded = true;
+      });
+    }).catchError((error) {
+      print('Error getting location: $error');
+    });
+  }
+
+
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
 
@@ -28,7 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       endDrawer: const DrawerWidget(),
       backgroundColor: background,
-      body: Padding(
+      body: hasLoaded ?  Padding(
         padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -50,26 +79,114 @@ class _HomeScreenState extends State<HomeScreen> {
                     Icons.campaign_outlined,
                   ),
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    TextWidget(
-                      text: 'Smart Solid\nWaste Collector',
-                      fontSize: 18,
-                      color: Colors.white,
-                      fontFamily: 'Bold',
+               StreamBuilder<DatabaseEvent>(
+              stream: FirebaseDatabase.instance.ref().onValue,
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  print(snapshot.error);
+                  return const Center(child: Text('Error'));
+                }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Padding(
+                    padding: EdgeInsets.only(top: 50),
+                    child: Center(
+                      child: CircularProgressIndicator(
+                        color: Colors.black,
+                      ),
                     ),
-                    Image.asset(
-                      'assets/images/image-removebg-preview (7) 1.png',
-                      height: 125,
-                    ),
-                    TextWidget(
-                      text: 'Garbage Truck Tracker',
-                      fontSize: 14,
-                      color: Colors.white,
-                      fontFamily: 'Bold',
-                    ),
-                  ],
+                  );
+                }
+                final dynamic cardata = snapshot.data!.snapshot.value;
+
+
+                if(calculateDistance(
+                    lat,
+                    lng,
+                    double.parse(cardata['NODES']['Truck-01']['current']
+                            [cardata['NODES']['Truck-01']['current'].length - 1]
+                        .toString()
+                        .split(',')[0]),
+                    double.parse(cardata['NODES']['Truck-01']['current']
+                            [cardata['NODES']['Truck-01']['current'].length - 1]
+                        .toString()
+                        .split(',')[1])) < 1) {
+
+                           showDialog(context: context, builder: (context) {
+                              return Dialog(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(20.0),
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Align(
+                                        alignment: Alignment.topRight,
+                                        child: IconButton(onPressed: () {
+                                          Navigator.pop(context);
+                                        }, icon: const Icon(Icons.close,
+                                        color: Colors.red,)),
+                                      ),
+                                      TextWidget(text: 'Garbage Truck Collector', fontSize: 18,
+                                      fontFamily: 'Bold',),
+
+                                      const SizedBox(height: 10,),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children: [
+                                           Image.asset(
+                          'assets/images/image-removebg-preview (7) 1.png',
+                          height: 125,
+                        ),
+                        const SizedBox(width: 10,),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                              TextWidget(text: 'has Arrived in your location', fontSize: 12,
+                                      fontFamily: 'Bold',),
+                                         TextWidget(text: 'Please prepare your garbage', fontSize: 12,
+                                      fontFamily: 'Bold',),
+                                      const SizedBox(height: 10,),
+                                       TextWidget(text: 'Thank you!', fontSize: 16,
+                                      fontFamily: 'Bold',),
+                          ],
+                        ),
+
+
+                                        ],
+                                      ),
+                                  
+                                    ],
+                                  ),
+                                ),
+                              );
+                            },);
+
+                        }
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        GestureDetector(
+                         
+                          child: TextWidget(
+                            text: 'Smart Solid\nWaste Collector',
+                            fontSize: 18,
+                            color: Colors.white,
+                            fontFamily: 'Bold',
+                          ),
+                        ),
+                        Image.asset(
+                          'assets/images/image-removebg-preview (7) 1.png',
+                          height: 125,
+                        ),
+                        TextWidget(
+                          text: 'Garbage Truck Tracker',
+                          fontSize: 14,
+                          color: Colors.white,
+                          fontFamily: 'Bold',
+                        ),
+                      ],
+                    );
+                  }
                 ),
                 Builder(builder: (context) {
                   return IconButton(
@@ -224,7 +341,47 @@ class _HomeScreenState extends State<HomeScreen> {
                 }),
           ],
         ),
+      ) : const Center(
+        child: CircularProgressIndicator(),
       ),
     );
+  }
+
+
+  Future<Position> determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Test if location services are enabled.
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      // Location services are not enabled don't continue
+      // accessing the position and request users of the
+      // App to enable the location services.
+      return Future.error('Location services are disabled.');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        // Permissions are denied, next time you could try
+        // requesting permissions again (this is also where
+        // Android's shouldShowRequestPermissionRationale
+        // returned true. According to Android guidelines
+        // your App should show an explanatory UI now.
+        return Future.error('Location permissions are denied');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      // Permissions are denied forever, handle appropriately.
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+
+    // When we reach here, permissions are granted and we can
+    // continue accessing the position of the device.
+    return await Geolocator.getCurrentPosition();
   }
 }

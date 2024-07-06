@@ -157,7 +157,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                   ),
                   IconButton(
                     onPressed: () {
-                      uploadPicture('gallery');
+                      uploadPicture('camera');
                     },
                     icon: const Icon(
                       Icons.upload,
@@ -167,13 +167,14 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
               ),
               SizedBox(
                 height: 100,
-                width: double.infinity,
+                width: 500,
                 child: ListView.builder(
                   itemCount: images.length,
                   itemBuilder: (context, index) {
                     return Card(
-                      child: ListTile(
-                        leading: TextWidget(
+                      child: SizedBox(
+                        height: 25,
+                        child: TextWidget(
                           color: Colors.black,
                           text: images[index],
                           fontSize: 18,

@@ -204,7 +204,7 @@ class _NotifScreenState extends State<NotifScreen> {
                                             title: TextWidget(
                                               align: TextAlign.start,
                                                 text:
-                                                    'Garbage Truck Collector is nearby please prepare your garbage. Thank you',
+                                                    'Garbage Truck Collector is  around 1km. Please prepare your garbage. Thank you.',
                                                 fontSize: 14),
                                           )  :ListTile(
                                             leading:
@@ -212,7 +212,7 @@ class _NotifScreenState extends State<NotifScreen> {
                                             title: TextWidget(
                                               align: TextAlign.start,
                                                 text:
-                                                    'Garbage Truck Collector is on the way please prepare the solid waste garbage. Thank you',
+                                                    'Garbage Truck Collector is on the way please prepare your solid waste garbage. Thank you.',
                                                 fontSize: 14),
                                           );
                                         },

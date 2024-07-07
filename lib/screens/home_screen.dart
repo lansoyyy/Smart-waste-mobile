@@ -114,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
                            showDialog(context: context, builder: (context) {
                               return Dialog(
                                 child: Padding(
-                                  padding: const EdgeInsets.all(20.0),
+                                  padding: const EdgeInsets.all(10.0),
                                   child: Column(
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
@@ -136,16 +136,20 @@ class _HomeScreenState extends State<HomeScreen> {
                           'assets/images/image-removebg-preview (7) 1.png',
                           height: 125,
                         ),
-                        const SizedBox(width: 10,),
+                        const SizedBox(width: 5,),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                              TextWidget(text: 'has Arrived in your location', fontSize: 12,
-                                      fontFamily: 'Bold',),
-                                         TextWidget(text: 'Please prepare your garbage', fontSize: 12,
-                                      fontFamily: 'Bold',),
-                                      const SizedBox(height: 10,),
+                              TextWidget(text: 'has Arrived in\nyour location', fontSize: 11,
+                                      fontFamily: 'Bold',
+                                    align: TextAlign.start,
+                                      
+                                      ),
+                                         TextWidget(text: 'Please prepare\nyour garbage', fontSize: 11,
+                                      fontFamily: 'Bold',
+                                       align: TextAlign.start,),
+                                      const SizedBox(height: 5,),
                                        TextWidget(text: 'Thank you!', fontSize: 16,
                                       fontFamily: 'Bold',),
                           ],

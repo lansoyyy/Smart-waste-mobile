@@ -219,9 +219,15 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                   color: primary,
                   label: 'Submit',
                   onPressed: () {
-                    addFeedback(emailController.text, messageController.text,
-                        nameController.text, images);
-                    showSubmittedDialog();
+                    if (emailController.text != '' ||
+                        messageController.text != '' ||
+                        nameController.text != '') {
+                      addFeedback(emailController.text, messageController.text,
+                          nameController.text, images);
+                      showSubmittedDialog();
+                    } else {
+                      showToast('Cannot proceed! All fields are required');
+                    }
                   },
                 ),
               ),

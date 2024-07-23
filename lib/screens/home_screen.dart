@@ -52,6 +52,24 @@ class _HomeScreenState extends State<HomeScreen> {
 
   GoogleMapController? mapController;
 
+    List<LatLng> getValidLatLngPoints(List<dynamic> points) {
+    List<LatLng> validPoints = [];
+    for (var point in points) {
+      if (point != null) {
+        try {
+          var coordinates = point.toString().split(',');
+          double lat = double.parse(coordinates[0]);
+          double lng = double.parse(coordinates[1]);
+          validPoints.add(LatLng(lat, lng));
+        } catch (e) {
+          // Handle parsing errors or log them
+          print('Invalid point encountered: $point');
+        }
+      }
+    }
+    return validPoints;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -217,132 +235,79 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(
               height: 10,
             ),
-            StreamBuilder<DatabaseEvent>(
-                stream: FirebaseDatabase.instance.ref().onValue,
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    print(snapshot.error);
-                    return const Center(child: Text('Error'));
-                  }
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Padding(
-                      padding: EdgeInsets.only(top: 50),
-                      child: Center(
-                        child: CircularProgressIndicator(
-                          color: Colors.black,
-                        ),
-                      ),
-                    );
-                  }
-                  final dynamic data = snapshot.data!.snapshot.value;
+       StreamBuilder<DatabaseEvent>(
+      stream: FirebaseDatabase.instance.ref().onValue,
+      builder: (context, snapshot) {
+        if (snapshot.hasError) {
+          print(snapshot.error);
+          return const Center(child: Text('Error'));
+        }
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Padding(
+            padding: EdgeInsets.only(top: 50),
+            child: Center(
+              child: CircularProgressIndicator(
+                color: Colors.black,
+              ),
+            ),
+          );
+        }
+        final dynamic data = snapshot.data!.snapshot.value;
+        final List<LatLng> validPoints = getValidLatLngPoints(data['NODES']['Truck-01']['current']);
 
-                  return Column(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        width: double.infinity,
-                        height: 350,
-                        child: GoogleMap(
-                          markers: {
-                            Marker(
-                              position: LatLng(
-                                  double.parse(data['NODES']['Truck-01']
-                                          ['current']
-                                      .first
-                                      .toString()
-                                      .split(',')[0]),
-                                  double.parse(data['NODES']['Truck-01']
-                                          ['current']
-                                      .first
-                                      .toString()
-                                      .split(',')[1])),
-                              markerId: const MarkerId(
-                                'Marker',
-                              ),
-                            ),
-                          },
-                          polylines: {
-                            Polyline(
-                              color: Colors.blue,
-                              width: 5,
-                              points: [
-                                for (int i = 0; i < data['NODES']['Truck-01']['current'].length; i++)
-                                  data['NODES']['Truck-01']['current'][i] == null
-                                      ? LatLng(
-                                          double.parse(data['NODES']['Truck-01']
-                                                  ['current']
-                                              .first
-                                              .toString()
-                                              .split(',')[0]),
-                                          double.parse(data['NODES']['Truck-01']
-                                                  ['current']
-                                              .first
-                                              .toString()
-                                              .split(',')[1]))
-                                      : LatLng(
-                                          double.parse(data['NODES']['Truck-01']
-                                                  ['current'][i]
-                                              .toString()
-                                              .split(',')[0]),
-                                          double.parse(data['NODES']['Truck-01']['current'][i].toString().split(',')[1])),
-                              ],
-                              polylineId: const PolylineId(
-                                'Location',
-                              ),
-                            ),
-                          },
-                          mapType: MapType.normal,
-                          initialCameraPosition: CameraPosition(
-                            target: LatLng(
-                                double.parse(data['NODES']['Truck-01']
-                                        ['current']
-                                    .first
-                                    .toString()
-                                    .split(',')[0]),
-                                double.parse(data['NODES']['Truck-01']
-                                        ['current']
-                                    .first
-                                    .toString()
-                                    .split(',')[1])),
-                            zoom: 14.4746,
-                          ),
-                          onMapCreated: (GoogleMapController controller) {
-                            _controller.complete(controller);
-                            setState(() {
-                              mapController = controller;
-                            });
-                          },
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 20,
-                      ),
-                      ButtonWidget(
-                        radius: 15,
-                        color: Colors.green,
-                        label: 'Track GT',
-                        onPressed: () {
-                          mapController!.animateCamera(
-                              CameraUpdate.newLatLngZoom(
-                                  LatLng(
-                                      double.parse(data['NODES']['Truck-01']
-                                              ['current']
-                                          .first
-                                          .toString()
-                                          .split(',')[0]),
-                                      double.parse(data['NODES']['Truck-01']
-                                              ['current']
-                                          .first
-                                          .toString()
-                                          .split(',')[1])),
-                                  18.0));
-                        },
-                      ),
-                    ],
+        return Column(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+              ),
+              width: double.infinity,
+              height: 350,
+              child: GoogleMap(
+                markers: {
+                  Marker(
+                    position: validPoints.isNotEmpty ? validPoints.first : const LatLng(0, 0),
+                    markerId: const MarkerId('Marker'),
+                  ),
+                },
+                polylines: {
+                  Polyline(
+                    color: Colors.blue,
+                    width: 5,
+                    points: validPoints,
+                    polylineId: const PolylineId('Location'),
+                  ),
+                },
+                mapType: MapType.normal,
+                initialCameraPosition: CameraPosition(
+                  target: validPoints.isNotEmpty ? validPoints.first : const LatLng(0, 0),
+                  zoom: 14.4746,
+                ),
+                onMapCreated: (GoogleMapController controller) {
+                  _controller.complete(controller);
+                  setState(() {
+                    mapController = controller;
+                  });
+                },
+              ),
+            ),
+            const SizedBox(height: 20),
+            ButtonWidget(
+              radius: 15,
+              color: Colors.green,
+              label: 'Track GT',
+              onPressed: () {
+                if (validPoints.isNotEmpty) {
+                  mapController!.animateCamera(
+                    CameraUpdate.newLatLngZoom(validPoints.first, 18.0),
                   );
-                }),
+                }
+              },
+            ),
+          ],
+        );
+      },
+    ),
           ],
         ),
       ) : const Center(

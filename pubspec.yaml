@@ -50,6 +50,7 @@ dependencies:
   firebase_database:
   image_picker:
   geolocator:
+  local_auth:
 
 dev_dependencies:
   flutter_test:

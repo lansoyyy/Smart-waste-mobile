@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:local_auth/local_auth.dart';
 import 'package:smart_waste_mobile/utlis/colors.dart';
 import 'package:smart_waste_mobile/widgets/button_widget.dart';
 import 'package:smart_waste_mobile/widgets/text_widget.dart';
+import 'package:smart_waste_mobile/widgets/toast_widget.dart';
 
 import 'home_screen.dart';
 
@@ -15,6 +18,30 @@ class LandingScreen extends StatefulWidget {
 
 class _LandingScreenState extends State<LandingScreen> {
   final box = GetStorage();
+
+  late final LocalAuthentication auth;
+  bool _supportState = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    auth = LocalAuthentication();
+    auth.isDeviceSupported().then(
+      (value) {
+        setState(() {
+          _supportState = value;
+        });
+
+        if (value) {
+          showToast('This device supports biometrics.');
+        } else {
+          showToast("This device doesn't supports biometrics!");
+        }
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,12 +84,34 @@ class _LandingScreenState extends State<LandingScreen> {
                 radius: 15,
                 fontSize: 18,
                 label: 'Get Started',
-                onPressed: () {
-                  box.write('started', true);
+                onPressed: () async {
+                  if (_supportState) {
+                    try {
+                      final bool didAuthenticate = await auth.authenticate(
+                          options: const AuthenticationOptions(
+                            biometricOnly: true,
+                          ),
+                          localizedReason: 'Please authenticate to proceed!');
 
-                  print(box.read('started'));
-                  Navigator.of(context).pushReplacement(MaterialPageRoute(
-                      builder: (context) => const HomeScreen()));
+                      if (didAuthenticate) {
+                        box.write('started', true);
+
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(
+                            builder: (context) => const HomeScreen()));
+                      } else {
+                        showToast('Invalid biometrics!');
+                      }
+                      // ···
+                    } on PlatformException {
+                      showToast('Something went wrong!');
+                      // ...
+                    }
+                  } else {
+                    box.write('started', true);
+
+                    Navigator.of(context).pushReplacement(MaterialPageRoute(
+                        builder: (context) => const HomeScreen()));
+                  }
                 },
               ),
             ],

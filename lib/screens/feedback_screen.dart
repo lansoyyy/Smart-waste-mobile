@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:smart_waste_mobile/screens/feedback_list.dart';
 import 'package:smart_waste_mobile/services/add_feedback.dart';
 import 'package:smart_waste_mobile/utlis/colors.dart';
 import 'package:smart_waste_mobile/widgets/button_widget.dart';
@@ -48,8 +49,15 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(
-                    width: 50,
+                  IconButton(
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => const FeedbackListScreen()));
+                    },
+                    icon: const Icon(
+                      Icons.feedback,
+                      color: Colors.white,
+                    ),
                   ),
                   TextWidget(
                     text: 'Smart Solid\nWaste Collector',

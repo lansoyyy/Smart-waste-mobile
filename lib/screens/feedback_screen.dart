@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:smart_waste_mobile/screens/feedback_list.dart';
 import 'package:smart_waste_mobile/services/add_feedback.dart';
+import 'package:smart_waste_mobile/utlis/app_constants.dart';
 import 'package:smart_waste_mobile/utlis/colors.dart';
 import 'package:smart_waste_mobile/widgets/button_widget.dart';
 import 'package:smart_waste_mobile/widgets/drawer_widget.dart';
@@ -25,6 +26,7 @@ class FeedbackScreen extends StatefulWidget {
 class _FeedbackScreenState extends State<FeedbackScreen> {
   final nameController = TextEditingController();
   final emailController = TextEditingController();
+  final locationController = TextEditingController();
   final messageController = TextEditingController();
 
   bool ischecked = false;
@@ -140,7 +142,8 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                 borderColor: Colors.black,
                 width: 500,
                 controller: emailController,
-                label: 'Email',
+                isRequred: false,
+                label: 'Email (optional)',
               ),
               const SizedBox(
                 height: 10,
@@ -149,9 +152,18 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                 borderColor: Colors.black,
                 width: 500,
                 controller: messageController,
-                label: 'Message',
+                label: 'Feedback',
                 maxLine: 10,
                 height: 150,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              TextFieldWidget(
+                borderColor: Colors.black,
+                width: 500,
+                controller: locationController,
+                label: 'Location',
               ),
               const SizedBox(
                 height: 10,
@@ -227,14 +239,23 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                   color: primary,
                   label: 'Submit',
                   onPressed: () {
-                    if (emailController.text != '' ||
-                        messageController.text != '' ||
-                        nameController.text != '') {
-                      addFeedback(emailController.text, messageController.text,
-                          nameController.text, images);
-                      showSubmittedDialog();
+                    if (!hasSubmitted) {
+                      if (emailController.text != '' ||
+                          messageController.text != '' ||
+                          nameController.text != '') {
+                        addFeedback(
+                            emailController.text,
+                            messageController.text,
+                            nameController.text,
+                            images,
+                            locationController.text);
+                        showSubmittedDialog();
+                      } else {
+                        showToast('Cannot proceed! All fields are required');
+                      }
                     } else {
-                      showToast('Cannot proceed! All fields are required');
+                      showToast(
+                          'You can only submit one feedback per day. Please try again tomorrow!');
                     }
                   },
                 ),
@@ -247,6 +268,9 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
   }
 
   showSubmittedDialog() {
+    setState(() {
+      hasSubmitted = true;
+    });
     showDialog(
       barrierDismissible: false,
       context: context,

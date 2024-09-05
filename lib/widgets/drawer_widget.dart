@@ -35,7 +35,7 @@ class DrawerWidget extends StatelessWidget {
             ),
             ListTile(
               leading: const Icon(
-                Icons.home,
+                Icons.home_outlined,
                 color: Colors.white,
               ),
               onTap: () {
@@ -51,7 +51,7 @@ class DrawerWidget extends StatelessWidget {
             ),
             ListTile(
               leading: const Icon(
-                Icons.notifications,
+                Icons.notifications_none,
                 color: Colors.white,
               ),
               onTap: () {
@@ -67,7 +67,7 @@ class DrawerWidget extends StatelessWidget {
             ),
             ListTile(
               leading: const Icon(
-                Icons.info,
+                Icons.info_outline,
                 color: Colors.white,
               ),
               onTap: () {
@@ -83,7 +83,7 @@ class DrawerWidget extends StatelessWidget {
             ),
             ListTile(
               leading: const Icon(
-                Icons.feedback,
+                Icons.feedback_outlined,
                 color: Colors.white,
               ),
               onTap: () {

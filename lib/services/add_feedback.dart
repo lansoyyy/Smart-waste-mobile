@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-Future<String> addFeedback(email, feedback, name, List images) async {
+Future<String> addFeedback(email, feedback, name, List images, location) async {
   final docUser = FirebaseFirestore.instance.collection('Feedbacks').doc();
 
   final json = {
@@ -10,6 +10,7 @@ Future<String> addFeedback(email, feedback, name, List images) async {
     'Name': name,
     'Images': images,
     'postedAt': DateTime.now(),
+    'location': location,
   };
 
   await docUser.set(json);

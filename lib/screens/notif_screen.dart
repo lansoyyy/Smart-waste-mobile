@@ -204,7 +204,7 @@ class _NotifScreenState extends State<NotifScreen> {
                                             title: TextWidget(
                                               align: TextAlign.start,
                                                 text:
-                                                    'Garbage Truck Collector is  around 1km. Please prepare your garbage. Thank you.',
+                                                    'Garbage Truck Collector has arrived at your location at ${DateFormat('hh:mm a').format(DateTime.now())}',
                                                 fontSize: 14),
                                           )  :ListTile(
                                             leading:

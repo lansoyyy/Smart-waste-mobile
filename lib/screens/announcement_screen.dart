@@ -121,18 +121,20 @@ class AnnouncementScreen extends StatelessWidget {
                           final data = snapshot.requireData;
                           return SizedBox(
                             height: 370,
-                            child: ListView.builder(
-                              itemCount: data.docs.length,
-                              itemBuilder: (context, index) {
-                                return ListTile(
-                                  leading: const Icon(Icons.notifications),
-                                  title: TextWidget(
-                                      align: TextAlign.start,
-                                      text:
-                                          '${data.docs[index]['announcement']} ${DateFormat.yMMMd().add_jm().format(data.docs[index]['postedAt'].toDate())}',
-                                      fontSize: 14),
-                                );
-                              },
+                            child: SingleChildScrollView(
+                              child: Column(
+                                children: [
+                                  for (int i = 0; i < data.docs.length; i++)
+                                    ListTile(
+                                      leading: const Icon(Icons.notifications),
+                                      title: TextWidget(
+                                          align: TextAlign.start,
+                                          text:
+                                              '${data.docs[i]['announcement']} ${DateFormat.yMMMd().add_jm().format(data.docs[i]['postedAt'].toDate())}',
+                                          fontSize: 14),
+                                    )
+                                ],
+                              ),
                             ),
                           );
                         }),

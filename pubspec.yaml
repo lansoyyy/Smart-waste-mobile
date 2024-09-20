@@ -51,6 +51,7 @@ dependencies:
   image_picker:
   geolocator:
   local_auth:
+  flutter_inapp_notifications:
 
 dev_dependencies:
   flutter_test:

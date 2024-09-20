@@ -2,8 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:smart_waste_mobile/screens/feedback_list.dart';
+import 'package:smart_waste_mobile/screens/terms_conditions_page.dart';
 import 'package:smart_waste_mobile/services/add_feedback.dart';
 import 'package:smart_waste_mobile/utlis/app_constants.dart';
 import 'package:smart_waste_mobile/utlis/colors.dart';
@@ -24,12 +26,50 @@ class FeedbackScreen extends StatefulWidget {
 }
 
 class _FeedbackScreenState extends State<FeedbackScreen> {
+  Future<void> triggerOnceADay(Function callback) async {
+    // Get the last triggered date from GetStorage
+    String? lastTriggeredDate = box.read('lastTriggeredDate');
+
+    // Get the current date
+    final today = DateTime.now();
+
+    // Check if the function has already been triggered today
+    if (lastTriggeredDate != null) {
+      final lastDate = DateTime.parse(lastTriggeredDate);
+
+      // If the last triggered date is today, do not run the function
+      if (lastDate.year == today.year &&
+          lastDate.month == today.month &&
+          lastDate.day == today.day) {
+        print('Already triggered today');
+        return;
+      }
+    }
+
+    // Run the callback function and update the last triggered date
+    callback();
+
+    // Save the current date as the last triggered date in GetStorage
+    box.write('lastTriggeredDate', today.toIso8601String());
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    triggerOnceADay(() {
+      box.write('submitted', false);
+    });
+  }
+
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final locationController = TextEditingController();
   final messageController = TextEditingController();
 
   bool ischecked = false;
+
+  final box = GetStorage();
 
   List images = [];
   @override
@@ -51,15 +91,8 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  IconButton(
-                    onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => const FeedbackListScreen()));
-                    },
-                    icon: const Icon(
-                      Icons.feedback,
-                      color: Colors.white,
-                    ),
+                  const SizedBox(
+                    width: 50,
                   ),
                   TextWidget(
                     text: 'Smart Solid\nWaste Collector',
@@ -92,7 +125,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       TextWidget(
-                        text: 'How may I help you?',
+                        text: 'Give Us Feedback',
                         fontSize: 18,
                         fontFamily: 'Bold',
                         color: Colors.white,
@@ -101,10 +134,24 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                         height: 10,
                       ),
                       TextWidget(
-                        text: 'how to use the app?',
+                        text: 'Your feedback is important to us!',
                         fontSize: 14,
                         fontFamily: 'Bold',
                         color: Colors.white,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      SizedBox(
+                        width: 200,
+                        child: TextWidget(
+                          align: TextAlign.start,
+                          text:
+                              'Please share your thoughts or report any issues you encountered. We appreciate your help in improving our service.',
+                          fontSize: 12,
+                          fontFamily: 'Regular',
+                          color: Colors.white,
+                        ),
                       ),
                     ],
                   ),
@@ -175,35 +222,39 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                     text: 'Upload Images',
                     fontSize: 14,
                   ),
-                  IconButton(
-                    onPressed: () {
+                  GestureDetector(
+                    onTap: () {
                       uploadPicture('camera');
                     },
-                    icon: const Icon(
+                    child: const Icon(
                       Icons.upload,
                     ),
                   ),
                 ],
               ),
-              SizedBox(
-                height: 100,
-                width: 500,
-                child: ListView.builder(
-                  itemCount: images.length,
-                  itemBuilder: (context, index) {
-                    return Card(
-                      child: SizedBox(
-                        height: 25,
-                        child: TextWidget(
-                          color: Colors.black,
-                          text: images[index],
-                          fontSize: 18,
-                        ),
-                      ),
-                    );
-                  },
-                ),
+              const SizedBox(
+                height: 5,
               ),
+              SizedBox(
+                  height: 100,
+                  width: 500,
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        for (int i = 0; i < images.length; i++)
+                          Card(
+                            child: SizedBox(
+                              height: 25,
+                              child: TextWidget(
+                                color: Colors.black,
+                                text: images[i],
+                                fontSize: 18,
+                              ),
+                            ),
+                          )
+                      ],
+                    ),
+                  )),
               Row(
                 children: [
                   IconButton(
@@ -222,11 +273,18 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                   const SizedBox(
                     width: 10,
                   ),
-                  TextWidget(
-                    text: 'I accept the Terms and Service',
-                    fontSize: 12,
-                    fontFamily: 'Bold',
-                    color: Colors.white,
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) =>
+                              const TermsAndConditionsPage()));
+                    },
+                    child: TextWidget(
+                      text: 'I ACCEPT THE TERMS AND CONDITIONS',
+                      fontSize: 14,
+                      fontFamily: 'Bold',
+                      color: Colors.white,
+                    ),
                   ),
                 ],
               ),
@@ -239,7 +297,9 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                   color: primary,
                   label: 'Submit',
                   onPressed: () {
-                    if (!hasSubmitted) {
+                    if (box.read('submitted') == null ||
+                        box.read('submitted') == 'null' ||
+                        box.read('submitted') == false) {
                       if (emailController.text != '' ||
                           messageController.text != '' ||
                           nameController.text != '') {
@@ -269,7 +329,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
 
   showSubmittedDialog() {
     setState(() {
-      hasSubmitted = true;
+      box.write('submitted', true);
     });
     showDialog(
       barrierDismissible: false,
@@ -352,12 +412,26 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
               SizedBox(
                 width: 20,
               ),
-              Text(
-                'Loading . . .',
-                style: TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'QRegular'),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Uploading . . .',
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'QRegular'),
+                  ),
+                  Text(
+                    'Please wait',
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 12,
+                        fontFamily: 'Regular'),
+                  ),
+                ],
               ),
             ],
           )),

@@ -309,8 +309,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   showGarbageDialog() {
-    
-                                  
     showDialog(
       context: context,
       builder: (context) {

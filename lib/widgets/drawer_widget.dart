@@ -3,6 +3,7 @@ import 'package:smart_waste_mobile/screens/aboutus_screen.dart';
 import 'package:smart_waste_mobile/screens/announcement_screen.dart';
 import 'package:smart_waste_mobile/screens/feedback_screen.dart';
 import 'package:smart_waste_mobile/screens/notif_screen.dart';
+import 'package:smart_waste_mobile/screens/schedule_screen.dart';
 import 'package:smart_waste_mobile/widgets/text_widget.dart';
 
 import '../screens/home_screen.dart';
@@ -60,6 +61,22 @@ class DrawerWidget extends StatelessWidget {
               },
               title: TextWidget(
                 text: 'Notifications',
+                fontSize: 14,
+                fontFamily: 'Bold',
+                color: Colors.white,
+              ),
+            ),
+            ListTile(
+              leading: const Icon(
+                Icons.calendar_month_outlined,
+                color: Colors.white,
+              ),
+              onTap: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const ScheduleScreen()));
+              },
+              title: TextWidget(
+                text: 'Schedule',
                 fontSize: 14,
                 fontFamily: 'Bold',
                 color: Colors.white,

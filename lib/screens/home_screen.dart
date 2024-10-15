@@ -147,7 +147,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               final dynamic cardata =
                                   snapshot.data!.snapshot.value;
 
-                              if (calculateDistance(
+                             try {
+                               if (calculateDistance(
                                       lat,
                                       lng,
                                       double.parse(cardata['NODES']['Truck-01']
@@ -169,6 +170,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                   },
                                 );
                               }
+                             } catch (e) {
+
+                             }
                               return Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
@@ -237,7 +241,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         }
                         final dynamic data = snapshot.data!.snapshot.value;
-                        final List<LatLng> validPoints = getValidLatLngPoints(
+                        final List<LatLng> validPoints = 
+                            data['NODES']['Truck-01']['current'] == null ? [LatLng(lat, lng)] : getValidLatLngPoints(
                             data['NODES']['Truck-01']['current']);
 
                         return Column(

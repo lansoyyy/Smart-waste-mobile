@@ -19,27 +19,10 @@ class LandingScreen extends StatefulWidget {
 class _LandingScreenState extends State<LandingScreen> {
   final box = GetStorage();
 
-  late final LocalAuthentication auth;
-  bool _supportState = false;
-
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    auth = LocalAuthentication();
-    auth.isDeviceSupported().then(
-      (value) {
-        setState(() {
-          _supportState = value;
-        });
-
-        if (value) {
-          showToast('This device supports biometrics.');
-        } else {
-          showToast("This device doesn't supports biometrics!");
-        }
-      },
-    );
   }
 
   @override
@@ -85,33 +68,10 @@ class _LandingScreenState extends State<LandingScreen> {
                 fontSize: 18,
                 label: 'Get Started',
                 onPressed: () async {
-                  if (_supportState) {
-                    try {
-                      final bool didAuthenticate = await auth.authenticate(
-                          options: const AuthenticationOptions(
-                            biometricOnly: true,
-                          ),
-                          localizedReason: 'Please authenticate to proceed!');
+                  box.write('started', true);
 
-                      if (didAuthenticate) {
-                        box.write('started', true);
-
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(
-                            builder: (context) => const HomeScreen()));
-                      } else {
-                        showToast('Invalid biometrics!');
-                      }
-                      // ···
-                    } on PlatformException {
-                      showToast('Something went wrong!');
-                      // ...
-                    }
-                  } else {
-                    box.write('started', true);
-
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(
-                        builder: (context) => const HomeScreen()));
-                  }
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => const HomeScreen()));
                 },
               ),
             ],

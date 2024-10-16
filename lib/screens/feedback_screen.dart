@@ -224,7 +224,30 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                   ),
                   GestureDetector(
                     onTap: () {
-                      uploadPicture('camera');
+                      showModalBottomSheet(
+                        context: context,
+                        builder: (context) {
+                          return Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              ListTile(
+                                onTap: () {
+                                  uploadPicture('camera');
+                                },
+                                title: const Text('Camera'),
+                                trailing: const Icon(Icons.camera),
+                              ),
+                              ListTile(
+                                onTap: () {
+                                  uploadPicture('gallery');
+                                },
+                                title: const Text('Gallery'),
+                                trailing: const Icon(Icons.photo),
+                              ),
+                            ],
+                          );
+                        },
+                      );
                     },
                     child: const Icon(
                       Icons.upload,
@@ -410,7 +433,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                 color: Colors.black,
               ),
               SizedBox(
-                width: 20,
+                width: 10,
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -418,7 +441,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    'Uploading . . .',
+                    'Uploading...',
                     style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,

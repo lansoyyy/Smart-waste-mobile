@@ -204,7 +204,7 @@ class _NotifScreenState extends State<NotifScreen> {
                                             title: TextWidget(
                                               align: TextAlign.start,
                                                 text:
-                                                    'Garbage Truck Collector is nearby please prepare your garbage. Thank you',
+                                                    'Garbage Truck Collector is nearby please prepare your garbage.',
                                                 fontSize: 14),
                                           )  :ListTile(
                                             leading:

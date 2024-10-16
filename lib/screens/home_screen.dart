@@ -100,6 +100,8 @@ class _HomeScreenState extends State<HomeScreen> {
         return shouldExit; // Return true if user confirms, false otherwise
       },
       child: Scaffold(
+        endDrawerEnableOpenDragGesture: false,
+          drawerEnableOpenDragGesture: false,
         endDrawer: const DrawerWidget(),
         backgroundColor: background,
         body: hasLoaded
@@ -147,32 +149,31 @@ class _HomeScreenState extends State<HomeScreen> {
                               final dynamic cardata =
                                   snapshot.data!.snapshot.value;
 
-                             try {
-                               if (calculateDistance(
-                                      lat,
-                                      lng,
-                                      double.parse(cardata['NODES']['Truck-01']
-                                              ['current'][cardata['NODES']
-                                                      ['Truck-01']['current']
-                                                  .length -
-                                              1]
-                                          .toString()
-                                          .split(',')[0]),
-                                      double.parse(cardata['NODES']['Truck-01']
-                                                  ['current'][
-                                              cardata['NODES']['Truck-01']['current'].length - 1]
-                                          .toString()
-                                          .split(',')[1])) <
-                                  1) {
-                                WidgetsBinding.instance.addPostFrameCallback(
-                                  (timeStamp) {
-                                    showGarbageDialog();
-                                  },
-                                );
-                              }
-                             } catch (e) {
-
-                             }
+                              try {
+                                if (calculateDistance(
+                                        lat,
+                                        lng,
+                                        double.parse(cardata['NODES']
+                                                    ['Truck-01']['current'][
+                                                cardata['NODES']['Truck-01']
+                                                            ['current']
+                                                        .length -
+                                                    1]
+                                            .toString()
+                                            .split(',')[0]),
+                                        double.parse(cardata['NODES']
+                                                    ['Truck-01']['current']
+                                                [cardata['NODES']['Truck-01']['current'].length - 1]
+                                            .toString()
+                                            .split(',')[1])) <
+                                    0.5) {
+                                  WidgetsBinding.instance.addPostFrameCallback(
+                                    (timeStamp) {
+                                      showGarbageDialog();
+                                    },
+                                  );
+                                }
+                              } catch (e) {}
                               return Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
@@ -241,9 +242,11 @@ class _HomeScreenState extends State<HomeScreen> {
                           );
                         }
                         final dynamic data = snapshot.data!.snapshot.value;
-                        final List<LatLng> validPoints = 
-                            data['NODES']['Truck-01']['current'] == null ? [LatLng(lat, lng)] : getValidLatLngPoints(
-                            data['NODES']['Truck-01']['current']);
+                        final List<LatLng> validPoints =
+                            data['NODES']['Truck-01']['current'] == null
+                                ? [LatLng(lat, lng)]
+                                : getValidLatLngPoints(
+                                    data['NODES']['Truck-01']['current']);
 
                         return Column(
                           children: [

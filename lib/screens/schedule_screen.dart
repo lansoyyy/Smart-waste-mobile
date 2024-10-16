@@ -189,12 +189,12 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                 for (int i = 0; i < data.length; i++)
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
                         padding: const EdgeInsets.all(5.0),
                         child: Container(
                           width: 110,
-                          height: 200,
                           decoration: BoxDecoration(
                               color: primary,
                               border: Border.all(
@@ -214,7 +214,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                         padding: const EdgeInsets.all(5.0),
                         child: Container(
                           width: 110,
-                          height: 200,
+                          height: i == 0 ? 100 : 200,
                           decoration: BoxDecoration(
                               color: Colors.green[200],
                               border: Border.all(
@@ -231,7 +231,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                         padding: const EdgeInsets.all(5.0),
                         child: Container(
                           width: 110,
-                          height: 200,
+                          height: i == 0 ? 100 : 200,
                           decoration: BoxDecoration(
                               color: primary,
                               border: Border.all(

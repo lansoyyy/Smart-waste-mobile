@@ -101,7 +101,7 @@ class _HomeScreenState extends State<HomeScreen> {
       },
       child: Scaffold(
         endDrawerEnableOpenDragGesture: false,
-          drawerEnableOpenDragGesture: false,
+        drawerEnableOpenDragGesture: false,
         endDrawer: const DrawerWidget(),
         backgroundColor: background,
         body: hasLoaded
@@ -137,14 +137,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               }
                               if (snapshot.connectionState ==
                                   ConnectionState.waiting) {
-                                return const Padding(
-                                  padding: EdgeInsets.only(top: 50),
-                                  child: Center(
-                                    child: CircularProgressIndicator(
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                );
+                                return const SizedBox();
                               }
                               final dynamic cardata =
                                   snapshot.data!.snapshot.value;
@@ -232,14 +225,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         }
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
-                          return const Padding(
-                            padding: EdgeInsets.only(top: 50),
-                            child: Center(
-                              child: CircularProgressIndicator(
-                                color: Colors.black,
-                              ),
-                            ),
-                          );
+                          return const SizedBox();
                         }
                         final dynamic data = snapshot.data!.snapshot.value;
                         final List<LatLng> validPoints =
@@ -294,12 +280,12 @@ class _HomeScreenState extends State<HomeScreen> {
                               color: Colors.green,
                               label: 'Track GT',
                               onPressed: () {
-                                if (validPoints.isNotEmpty) {
+                                setState(() {
                                   mapController!.animateCamera(
                                     CameraUpdate.newLatLngZoom(
                                         validPoints.first, 18.0),
                                   );
-                                }
+                                });
                               },
                             ),
                           ],

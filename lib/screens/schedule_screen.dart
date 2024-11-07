@@ -25,6 +25,33 @@ class ScheduleScreen extends StatefulWidget {
 class _ScheduleScreenState extends State<ScheduleScreen> {
   final searchController = TextEditingController();
   String nameSearched = '';
+
+  List data = [
+    {
+      'name': 'Monday',
+      'time': '8:00AM-12:00NN',
+    },
+    {
+      'name': 'Tuesday',
+      'time': '6:00AM-12:00NN',
+    },
+    {
+      'name': 'Wednesday',
+      'time': '8:00AM-12:00NN',
+    },
+    {
+      'name': 'Thursday',
+      'time': '8:00AM-12:00NN',
+    },
+    {
+      'name': 'Friday',
+      'time': '8:00AM-12:00NN',
+    },
+    {
+      'name': 'Saturday',
+      'time': '6:00AM-10:00AM',
+    },
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -100,152 +127,96 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                 ),
                 Container(
                   width: double.infinity,
-                  height: 60,
-                  color: primary,
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          height: 50,
-                          width: 200,
-                          decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Colors.white,
-                                width: 0.5,
-                              ),
-                              borderRadius: BorderRadius.circular(5)),
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 10, right: 10),
-                            child: TextFormField(
-                              style: const TextStyle(
-                                  color: Colors.white,
-                                  fontFamily: 'Regular',
-                                  fontSize: 14),
-                              onChanged: (value) {
-                                setState(() {
-                                  nameSearched = value;
-                                });
-                              },
-                              decoration: const InputDecoration(
-                                labelStyle: TextStyle(
-                                  color: Colors.white,
-                                ),
-                                labelText: 'Search barangay...',
-                                hintStyle: TextStyle(
-                                    fontFamily: 'Regular',
-                                    fontSize: 12,
-                                    color: Colors.white),
-                              ),
-                              controller: searchController,
-                            ),
-                          ),
-                        ),
-                        TextWidget(
-                          text: 'BARANGAY',
-                          fontSize: 18,
-                          fontFamily: 'Bold',
-                          color: Colors.white,
-                        ),
-                      ],
-                    ),
+                  height: 600,
+                  decoration: BoxDecoration(
+                    color: Colors.green[800],
+                    borderRadius: BorderRadius.circular(20),
                   ),
-                ),
-                Container(
-                  width: double.infinity,
-                  height: 50,
-                  color: Colors.teal[600],
-                  child: Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        TextWidget(
-                          text: 'AREA',
-                          fontSize: 18,
-                          fontFamily: 'Bold',
-                          color: Colors.white,
-                        ),
-                        TextWidget(
-                          text: 'DAY',
-                          fontSize: 18,
-                          fontFamily: 'Bold',
-                          color: Colors.white,
-                        ),
-                        TextWidget(
-                          text: 'TIME',
-                          fontSize: 18,
-                          fontFamily: 'Bold',
-                          color: Colors.white,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                for (int i = 0; i < data.length; i++)
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  child: Column(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Container(
-                          width: 110,
-                          decoration: BoxDecoration(
-                              color: primary,
-                              border: Border.all(
-                                color: Colors.black,
-                              )),
-                          child: Padding(
-                            padding: const EdgeInsets.all(2.0),
-                            child: TextWidget(
-                              text: data[i]['area'],
-                              fontSize: 12,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
+                      const SizedBox(
+                        height: 20,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Container(
-                          width: 110,
-                          height: i == 0 ? 100 : 200,
-                          decoration: BoxDecoration(
-                              color: Colors.green[200],
-                              border: Border.all(
-                                color: Colors.black,
-                              )),
+                      Container(
+                        width: double.infinity,
+                        height: 50,
+                        color: Colors.brown,
+                        child: Center(
                           child: TextWidget(
-                            text: data[i]['day'],
-                            fontSize: 14,
+                            text: data[DateTime.now().weekday - 1]['name'],
+                            fontSize: 18,
                             color: Colors.white,
                           ),
                         ),
                       ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      TextWidget(
+                        text: 'Time',
+                        fontSize: 18,
+                        color: Colors.white,
+                      ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      ButtonWidget(
+                        width: 200,
+                        color: primary,
+                        label: data[DateTime.now().weekday - 1]['time'],
+                        onPressed: () {},
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
                       Padding(
-                        padding: const EdgeInsets.all(5.0),
+                        padding: const EdgeInsets.all(20.0),
                         child: Container(
-                          width: 110,
-                          height: i == 0 ? 100 : 200,
+                          width: double.infinity,
+                          height: 375,
                           decoration: BoxDecoration(
-                              color: primary,
-                              border: Border.all(
-                                color: Colors.black,
-                              )),
-                          child: TextWidget(
-                            text: data[i]['time'],
-                            fontSize: 14,
-                            color: Colors.white,
+                            color: Colors.green[400],
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Column(
+                            children: [
+                              Container(
+                                width: double.infinity,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  color: Colors.green[600],
+                                  borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(20),
+                                    topRight: Radius.circular(20),
+                                  ),
+                                ),
+                                child: Center(
+                                  child: TextWidget(
+                                    text: 'Area',
+                                    fontSize: 18,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(
+                                height: 10,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Center(
+                                  child: Image.asset(
+                                    'assets/images/${DateTime.now().weekday - 1}.PNG',
+                                    height: 290,
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
                     ],
                   ),
+                ),
                 const SizedBox(
                   height: 10,
                 ),

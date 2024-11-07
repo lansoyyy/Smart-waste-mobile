@@ -107,192 +107,216 @@ class _HomeScreenState extends State<HomeScreen> {
         body: hasLoaded
             ? Padding(
                 padding: const EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) =>
-                                    const AnnouncementScreen()));
-                          },
-                          icon: const Icon(
-                            Icons.campaign_outlined,
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) =>
+                                      const AnnouncementScreen()));
+                            },
+                            icon: const Icon(
+                              Icons.campaign_outlined,
+                            ),
                           ),
-                        ),
-                        StreamBuilder<DatabaseEvent>(
-                            stream: FirebaseDatabase.instance.ref().onValue,
-                            builder: (context, snapshot) {
-                              if (snapshot.hasError) {
-                                print(snapshot.error);
-                                return const Center(child: Text('Error'));
-                              }
-                              if (snapshot.connectionState ==
-                                  ConnectionState.waiting) {
-                                return const SizedBox();
-                              }
-                              final dynamic cardata =
-                                  snapshot.data!.snapshot.value;
-
-                              try {
-                                if (calculateDistance(
-                                        lat,
-                                        lng,
-                                        double.parse(cardata['NODES']
-                                                    ['Truck-01']['current'][
-                                                cardata['NODES']['Truck-01']
-                                                            ['current']
-                                                        .length -
-                                                    1]
-                                            .toString()
-                                            .split(',')[0]),
-                                        double.parse(cardata['NODES']
-                                                    ['Truck-01']['current']
-                                                [cardata['NODES']['Truck-01']['current'].length - 1]
-                                            .toString()
-                                            .split(',')[1])) <
-                                    0.5) {
-                                  WidgetsBinding.instance.addPostFrameCallback(
-                                    (timeStamp) {
-                                      showGarbageDialog();
-                                    },
-                                  );
+                          StreamBuilder<DatabaseEvent>(
+                              stream: FirebaseDatabase.instance.ref().onValue,
+                              builder: (context, snapshot) {
+                                if (snapshot.hasError) {
+                                  print(snapshot.error);
+                                  return const Center(child: Text('Error'));
                                 }
-                              } catch (e) {}
-                              return Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  GestureDetector(
-                                    child: TextWidget(
-                                      text: 'Smart Solid\nWaste Collector',
-                                      fontSize: 18,
+                                if (snapshot.connectionState ==
+                                    ConnectionState.waiting) {
+                                  return const SizedBox();
+                                }
+                                final dynamic cardata =
+                                    snapshot.data!.snapshot.value;
+
+                                try {
+                                  if (calculateDistance(
+                                          lat,
+                                          lng,
+                                          double.parse(cardata['NODES']
+                                                      ['Truck-01']['current'][
+                                                  cardata['NODES']['Truck-01']
+                                                              ['current']
+                                                          .length -
+                                                      1]
+                                              .toString()
+                                              .split(',')[0]),
+                                          double.parse(cardata['NODES']
+                                                      ['Truck-01']['current']
+                                                  [cardata['NODES']['Truck-01']['current'].length - 1]
+                                              .toString()
+                                              .split(',')[1])) <
+                                      0.5) {
+                                    WidgetsBinding.instance
+                                        .addPostFrameCallback(
+                                      (timeStamp) {
+                                        showGarbageDialog();
+                                      },
+                                    );
+                                  }
+                                } catch (e) {}
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    GestureDetector(
+                                      child: TextWidget(
+                                        text: 'Smart Solid\nWaste Collector',
+                                        fontSize: 18,
+                                        color: Colors.white,
+                                        fontFamily: 'Bold',
+                                      ),
+                                    ),
+                                    Image.asset(
+                                      'assets/images/image-removebg-preview (7) 1.png',
+                                      height: 125,
+                                    ),
+                                    TextWidget(
+                                      text: 'Garbage Truck Tracker',
+                                      fontSize: 14,
                                       color: Colors.white,
                                       fontFamily: 'Bold',
                                     ),
-                                  ),
-                                  Image.asset(
-                                    'assets/images/image-removebg-preview (7) 1.png',
-                                    height: 125,
-                                  ),
-                                  TextWidget(
-                                    text: 'Garbage Truck Tracker',
-                                    fontSize: 14,
-                                    color: Colors.white,
-                                    fontFamily: 'Bold',
-                                  ),
-                                ],
-                              );
-                            }),
-                        Builder(builder: (context) {
-                          return IconButton(
-                            onPressed: () async {
-                              Scaffold.of(context).openEndDrawer();
-                            },
-                            icon: const Icon(
-                              Icons.menu,
-                              color: Colors.white,
-                            ),
-                          );
-                        }),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    const Divider(
-                      color: Colors.white,
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    StreamBuilder<DatabaseEvent>(
-                      stream: FirebaseDatabase.instance.ref().onValue,
-                      builder: (context, snapshot) {
-                        if (snapshot.hasError) {
-                          print(snapshot.error);
-                          return const Center(child: Text('Error'));
-                        }
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const SizedBox();
-                        }
-                        final dynamic data = snapshot.data!.snapshot.value;
-                        final List<LatLng> validPoints =
-                            data['NODES']['Truck-01']['current'] == null
-                                ? [LatLng(lat, lng)]
-                                : getValidLatLngPoints(
-                                    data['NODES']['Truck-01']['current']);
-
-                        return Column(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
+                                  ],
+                                );
+                              }),
+                          Builder(builder: (context) {
+                            return IconButton(
+                              onPressed: () async {
+                                Scaffold.of(context).openEndDrawer();
+                              },
+                              icon: const Icon(
+                                Icons.menu,
+                                color: Colors.white,
                               ),
-                              width: double.infinity,
-                              height: 350,
-                              child: GoogleMap(
-                                markers: {
-                                  Marker(
-                                    position: validPoints.isNotEmpty
+                            );
+                          }),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      const Divider(
+                        color: Colors.white,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      StreamBuilder<DatabaseEvent>(
+                        stream: FirebaseDatabase.instance.ref().onValue,
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError) {
+                            print(snapshot.error);
+                            return const Center(child: Text('Error'));
+                          }
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return Padding(
+                              padding: const EdgeInsets.only(top: 50),
+                              child: Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    const CircularProgressIndicator(
+                                      color: Colors.black,
+                                    ),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    TextWidget(
+                                      text: 'Loading. Please wait',
+                                      fontSize: 12,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            );
+                          }
+                          final dynamic data = snapshot.data!.snapshot.value;
+                          final List<LatLng> validPoints =
+                              data['NODES']['Truck-01']['current'] == null
+                                  ? [LatLng(lat, lng)]
+                                  : getValidLatLngPoints(
+                                      data['NODES']['Truck-01']['current']);
+
+                          return Column(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                width: double.infinity,
+                                height: 350,
+                                child: GoogleMap(
+                                  markers: {
+                                    Marker(
+                                      position: validPoints.isNotEmpty
+                                          ? validPoints.first
+                                          : const LatLng(0, 0),
+                                      markerId: const MarkerId('Marker'),
+                                    ),
+                                  },
+                                  polylines: {
+                                    Polyline(
+                                      color: Colors.blue,
+                                      width: 5,
+                                      points: validPoints,
+                                      polylineId: const PolylineId('Location'),
+                                    ),
+                                  },
+                                  mapType: MapType.normal,
+                                  initialCameraPosition: CameraPosition(
+                                    target: validPoints.isNotEmpty
                                         ? validPoints.first
                                         : const LatLng(0, 0),
-                                    markerId: const MarkerId('Marker'),
+                                    zoom: 14.4746,
                                   ),
-                                },
-                                polylines: {
-                                  Polyline(
-                                    color: Colors.blue,
-                                    width: 5,
-                                    points: validPoints,
-                                    polylineId: const PolylineId('Location'),
-                                  ),
-                                },
-                                mapType: MapType.normal,
-                                initialCameraPosition: CameraPosition(
-                                  target: validPoints.isNotEmpty
-                                      ? validPoints.first
-                                      : const LatLng(0, 0),
-                                  zoom: 14.4746,
+                                  onMapCreated:
+                                      (GoogleMapController controller) {
+                                    setState(() {
+                                      _controller.complete(controller);
+                                      mapController = controller;
+                                    });
+                                  },
                                 ),
-                                onMapCreated: (GoogleMapController controller) {
-                                  _controller.complete(controller);
-                                  setState(() {
-                                    mapController = controller;
-                                  });
+                              ),
+                              const SizedBox(height: 20),
+                              ButtonWidget(
+                                radius: 15,
+                                color: Colors.green,
+                                label: 'Track GT',
+                                onPressed: () {
+                                  print('1234');
+                                  mapController!.moveCamera(
+                                    CameraUpdate.newLatLngZoom(
+                                        const LatLng(8.477217, 124.645920),
+                                        18.0),
+                                  );
                                 },
                               ),
-                            ),
-                            const SizedBox(height: 20),
-                            ButtonWidget(
-                              radius: 15,
-                              color: Colors.green,
-                              label: 'Track GT',
-                              onPressed: () {
-                                setState(() {
-                                  mapController!.animateCamera(
-                                    CameraUpdate.newLatLngZoom(
-                                        validPoints.first, 18.0),
-                                  );
-                                });
-                              },
-                            ),
-                          ],
-                        );
-                      },
-                    ),
-                  ],
+                            ],
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                 ),
               )
             : const Center(

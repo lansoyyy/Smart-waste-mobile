@@ -29,6 +29,13 @@ class _HomeScreenState extends State<HomeScreen> {
     getLocation();
   }
 
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    mapController!.dispose();
+  }
+
   bool hasLoaded = false;
   double lat = 0;
   double lng = 0;
@@ -288,12 +295,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                         : const LatLng(0, 0),
                                     zoom: 14.4746,
                                   ),
-                                  onMapCreated:
-                                      (GoogleMapController controller) {
-                                    setState(() {
-                                      _controller.complete(controller);
-                                      mapController = controller;
-                                    });
+                                  onMapCreated: (controller) {
+                                    _controller.complete(controller);
+                                    // setState(() {
+                                    //   mapController = controller;
+                                    // });
                                   },
                                 ),
                               ),
@@ -302,13 +308,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                 radius: 15,
                                 color: Colors.green,
                                 label: 'Track GT',
-                                onPressed: () {
-                                  print('12345');
-                                  mapController!.moveCamera(
-                                    CameraUpdate.newLatLngZoom(
-                                        const LatLng(8.477217, 124.645920),
-                                        18.0),
-                                  );
+                                onPressed: () async {
+                                  final GoogleMapController controller =
+                                      await _controller.future;
+                                  await controller.animateCamera(
+                                      CameraUpdate.newCameraPosition(
+                                          const CameraPosition(
+                                              target:
+                                                  LatLng(8.477217, 124.645920),
+                                              zoom: 18)));
                                 },
                               ),
                             ],

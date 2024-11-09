@@ -425,15 +425,18 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
         context: context,
         barrierDismissible: false,
         builder: (BuildContext context) => const Padding(
-          padding: EdgeInsets.only(left: 30, right: 30),
+          padding: EdgeInsets.only(left: 15, right: 15),
           child: AlertDialog(
               title: Row(
             children: [
-              CircularProgressIndicator(
-                color: Colors.black,
+              SizedBox(
+                height: 15,
+                child: CircularProgressIndicator(
+                  color: Colors.black,
+                ),
               ),
               SizedBox(
-                width: 10,
+                width: 5,
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -445,13 +448,14 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                     style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
-                        fontFamily: 'QRegular'),
+                        fontFamily: 'QRegular',
+                        fontSize: 12),
                   ),
                   Text(
                     'Please wait',
                     style: TextStyle(
                         color: Colors.black,
-                        fontSize: 12,
+                        fontSize: 10,
                         fontFamily: 'Regular'),
                   ),
                 ],

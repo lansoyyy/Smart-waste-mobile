@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_inapp_notifications/flutter_inapp_notifications.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:smart_waste_mobile/screens/announcement_screen.dart';
 import 'package:smart_waste_mobile/screens/notif_screen.dart';
@@ -168,12 +169,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                               .toString()
                                               .split(',')[1])) <
                                       0.5) {
-                                    WidgetsBinding.instance
-                                        .addPostFrameCallback(
-                                      (timeStamp) {
-                                        showGarbageDialog();
-                                      },
-                                    );
+                                    if (box.read('toshow')) {
+                                      WidgetsBinding.instance
+                                          .addPostFrameCallback(
+                                        (timeStamp) {
+                                          showGarbageDialog();
+                                        },
+                                      );
+                                    }
                                   }
                                 } catch (e) {}
                                 return Column(
@@ -334,6 +337,8 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  final box = GetStorage();
+
   showGarbageDialog() {
     showDialog(
       context: context,
@@ -348,6 +353,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   alignment: Alignment.topRight,
                   child: IconButton(
                       onPressed: () {
+                        box.write('toshow', false);
                         Navigator.pop(context);
                       },
                       icon: const Icon(

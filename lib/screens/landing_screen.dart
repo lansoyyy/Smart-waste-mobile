@@ -67,8 +67,9 @@ class _LandingScreenState extends State<LandingScreen> {
                 radius: 15,
                 fontSize: 18,
                 label: 'Get Started',
-                onPressed: () async {
+                onPressed: () {
                   box.write('started', true);
+                  box.write('toshow', true);
 
                   Navigator.of(context).pushReplacement(MaterialPageRoute(
                       builder: (context) => const HomeScreen()));

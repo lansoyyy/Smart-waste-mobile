@@ -26,8 +26,10 @@ class _MyAppState extends State<MyApp> {
   final box = GetStorage();
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: LandingScreen(),
+    return MaterialApp(
+      home: box.read('started') ?? false
+          ? const HomeScreen()
+          : const LandingScreen(),
     );
   }
 }

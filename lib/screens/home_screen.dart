@@ -275,6 +275,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 width: double.infinity,
                                 height: 350,
                                 child: GoogleMap(
+                                  myLocationButtonEnabled: true,
+                                  myLocationEnabled: true,
                                   markers: {
                                     Marker(
                                       position: validPoints.isNotEmpty

@@ -52,6 +52,16 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
       'time': '6:00AM-10:00AM',
     },
   ];
+
+  List notes = [
+    'Sample Notes',
+    'Sample Notes',
+    'Sample Notes',
+    'Sample Notes',
+    'Sample Notes',
+    'Sample Notes',
+  ];
+  int index = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -127,7 +137,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                 ),
                 Container(
                   width: double.infinity,
-                  height: 600,
+                  height: 650,
                   decoration: BoxDecoration(
                     color: Colors.green[800],
                     borderRadius: BorderRadius.circular(20),
@@ -192,7 +202,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                                 ),
                                 child: Center(
                                   child: TextWidget(
-                                    text: 'Area',
+                                    text: index != 0 ? 'Note' : 'Area',
                                     fontSize: 18,
                                     color: Colors.white,
                                   ),
@@ -204,16 +214,43 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Center(
-                                  child: Image.asset(
-                                    'assets/images/${DateTime.now().weekday - 1}.PNG',
-                                    height: 290,
-                                  ),
+                                  child: index != 0
+                                      ? TextWidget(
+                                          text:
+                                              notes[DateTime.now().weekday - 1],
+                                          fontSize: 14,
+                                          color: Colors.white,
+                                        )
+                                      : Image.asset(
+                                          'assets/images/${DateTime.now().weekday - 1}.PNG',
+                                          height: 290,
+                                        ),
                                 ),
                               ),
                             ],
                           ),
                         ),
                       ),
+                      const SizedBox(
+                        height: 5,
+                      ),
+                      ButtonWidget(
+                        width: 150,
+                        color: Colors.grey,
+                        radius: 100,
+                        label: index != 0 ? 'Back' : 'Note',
+                        onPressed: () {
+                          if (index != 0) {
+                            setState(() {
+                              index = 0;
+                            });
+                          } else {
+                            setState(() {
+                              index = 1;
+                            });
+                          }
+                        },
+                      )
                     ],
                   ),
                 ),

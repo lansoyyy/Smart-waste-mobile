@@ -54,12 +54,19 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   ];
 
   List notes = [
-    'Sample Notes',
-    'Sample Notes',
-    'Sample Notes',
-    'Sample Notes',
-    'Sample Notes',
-    'Sample Notes',
+    '',
+    '',
+    '''
+Silae - Miglamin 2nd Wednesday
+of the Month\n
+Mapulo - Miglamin 4th Wednesday
+of the Month
+''',
+    '''
+Mapayag - Can - ayan\n1st Thursday of the month
+    ''',
+    '',
+    '',
   ];
   int index = 0;
   @override

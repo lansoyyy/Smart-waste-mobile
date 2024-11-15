@@ -69,8 +69,10 @@ Mapayag - Can - ayan\n1st Thursday of the month
     '',
   ];
   int index = 0;
+  bool isNote = false;
   @override
   Widget build(BuildContext context) {
+    print(index);
     return Scaffold(
         endDrawer: const DrawerWidget(),
         backgroundColor: background,
@@ -159,7 +161,7 @@ Mapayag - Can - ayan\n1st Thursday of the month
                         color: Colors.brown,
                         child: Center(
                           child: TextWidget(
-                            text: data[DateTime.now().weekday - 1]['name'],
+                            text: data[index]['name'],
                             fontSize: 18,
                             color: Colors.white,
                           ),
@@ -179,61 +181,77 @@ Mapayag - Can - ayan\n1st Thursday of the month
                       ButtonWidget(
                         width: 200,
                         color: primary,
-                        label: data[DateTime.now().weekday - 1]['time'],
+                        label: data[index]['time'],
                         onPressed: () {},
                       ),
                       const SizedBox(
                         height: 10,
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(20.0),
-                        child: Container(
-                          width: double.infinity,
-                          height: 375,
-                          decoration: BoxDecoration(
-                            color: Colors.green[400],
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Column(
-                            children: [
-                              Container(
-                                width: double.infinity,
-                                height: 50,
-                                decoration: BoxDecoration(
-                                  color: Colors.green[600],
-                                  borderRadius: const BorderRadius.only(
-                                    topLeft: Radius.circular(20),
-                                    topRight: Radius.circular(20),
+                      GestureDetector(
+                        onHorizontalDragEnd: (details) {
+                          if (details.velocity.pixelsPerSecond.dx > 0) {
+                            if (index > 0) {
+                              setState(() {
+                                index--;
+                              });
+                            }
+                          } else if (details.velocity.pixelsPerSecond.dx < 0) {
+                            if (index < 5) {
+                              setState(() {
+                                index++;
+                              });
+                            }
+                          }
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(20.0),
+                          child: Container(
+                            width: double.infinity,
+                            height: 375,
+                            decoration: BoxDecoration(
+                              color: Colors.green[400],
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Column(
+                              children: [
+                                Container(
+                                  width: double.infinity,
+                                  height: 50,
+                                  decoration: BoxDecoration(
+                                    color: Colors.green[600],
+                                    borderRadius: const BorderRadius.only(
+                                      topLeft: Radius.circular(20),
+                                      topRight: Radius.circular(20),
+                                    ),
+                                  ),
+                                  child: Center(
+                                    child: TextWidget(
+                                      text: !isNote ? 'Note' : 'Area',
+                                      fontSize: 18,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
-                                child: Center(
-                                  child: TextWidget(
-                                    text: index != 0 ? 'Note' : 'Area',
-                                    fontSize: 18,
-                                    color: Colors.white,
+                                const SizedBox(
+                                  height: 10,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Center(
+                                    child: !isNote
+                                        ? TextWidget(
+                                            text: notes[index],
+                                            fontSize: 14,
+                                            color: Colors.white,
+                                          )
+                                        : Image.asset(
+                                            'assets/images/${index + 1}.PNG',
+                                            height: 290,
+                                          ),
                                   ),
                                 ),
-                              ),
-                              const SizedBox(
-                                height: 10,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Center(
-                                  child: index != 0
-                                      ? TextWidget(
-                                          text:
-                                              notes[DateTime.now().weekday - 1],
-                                          fontSize: 14,
-                                          color: Colors.white,
-                                        )
-                                      : Image.asset(
-                                          'assets/images/${DateTime.now().weekday - 1}.PNG',
-                                          height: 290,
-                                        ),
-                                ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
@@ -244,15 +262,15 @@ Mapayag - Can - ayan\n1st Thursday of the month
                         width: 150,
                         color: Colors.grey,
                         radius: 100,
-                        label: index != 0 ? 'Back' : 'Note',
+                        label: isNote ? 'Note' : 'Back',
                         onPressed: () {
-                          if (index != 0) {
+                          if (!isNote) {
                             setState(() {
-                              index = 0;
+                              isNote = true;
                             });
                           } else {
                             setState(() {
-                              index = 1;
+                              isNote = false;
                             });
                           }
                         },

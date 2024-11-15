@@ -11,6 +11,7 @@ void main() async {
     name: 'garbage-collector-8c46b',
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await GetStorage.init();
   runApp(const MyApp());
 }
 

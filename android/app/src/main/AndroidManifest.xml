@@ -3,7 +3,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.USE_BIOMETRIC"/>
     <application
-        android:label="smart_waste_mobile"
+        android:label="Smart Solid Waste Collector"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

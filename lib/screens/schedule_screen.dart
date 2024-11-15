@@ -108,9 +108,8 @@ Mapayag - Can - ayan\n1st Thursday of the month
                             fontFamily: 'Bold',
                           ),
                         ),
-                        Image.asset(
-                          'assets/images/image-removebg-preview (7) 1.png',
-                          height: 125,
+                        const SizedBox(
+                          height: 20,
                         ),
                         TextWidget(
                           text: 'SCHEDULE',

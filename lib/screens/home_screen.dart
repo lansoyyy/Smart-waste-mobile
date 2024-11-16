@@ -275,14 +275,27 @@ class _HomeScreenState extends State<HomeScreen> {
                                 width: double.infinity,
                                 height: 350,
                                 child: GoogleMap(
-                                  myLocationButtonEnabled: true,
-                                  myLocationEnabled: true,
                                   markers: {
                                     Marker(
                                       position: validPoints.isNotEmpty
                                           ? validPoints.first
                                           : const LatLng(0, 0),
                                       markerId: const MarkerId('Marker'),
+                                      infoWindow: InfoWindow(
+                                        title: 'Receiver',
+                                        snippet:
+                                            '${calculateDistance(validPoints.first.latitude, validPoints.first.longitude, validPoints.last.latitude, validPoints.last.longitude)}km away',
+                                      ),
+                                    ),
+                                    Marker(
+                                      position: validPoints.isNotEmpty
+                                          ? validPoints.last
+                                          : const LatLng(0, 0),
+                                      markerId: const MarkerId('Truck'),
+                                      infoWindow: const InfoWindow(
+                                        title: 'Truck',
+                                        snippet: 'Truck Location',
+                                      ),
                                     ),
                                   },
                                   polylines: {
@@ -318,9 +331,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                       await _controller.future;
                                   await controller.animateCamera(
                                       CameraUpdate.newCameraPosition(
-                                          const CameraPosition(
-                                              target:
-                                                  LatLng(8.477217, 124.645920),
+                                          CameraPosition(
+                                              target: LatLng(lat, lng),
                                               zoom: 18)));
                                 },
                               ),

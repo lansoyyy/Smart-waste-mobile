@@ -226,7 +226,7 @@ Mapayag - Can - ayan\n1st Thursday of the month
                                   ),
                                   child: Center(
                                     child: TextWidget(
-                                      text: !isNote ? 'Note' : 'Area',
+                                      text: isNote ? 'Note' : 'Area',
                                       fontSize: 18,
                                       color: Colors.white,
                                     ),
@@ -238,7 +238,7 @@ Mapayag - Can - ayan\n1st Thursday of the month
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Center(
-                                    child: !isNote
+                                    child: isNote
                                         ? TextWidget(
                                             text: notes[index],
                                             fontSize: 14,
@@ -262,7 +262,7 @@ Mapayag - Can - ayan\n1st Thursday of the month
                         width: 150,
                         color: Colors.grey,
                         radius: 100,
-                        label: isNote ? 'Note' : 'Back',
+                        label: !isNote ? 'Note' : 'Back',
                         onPressed: () {
                           if (!isNote) {
                             setState(() {

@@ -66,7 +66,6 @@ class _NotifScreenState extends State<NotifScreen> {
                 }
                 final dynamic cardata = snapshot.data!.snapshot.value;
 
-               
                 return Padding(
                   padding: const EdgeInsets.all(20),
                   child: SingleChildScrollView(
@@ -176,45 +175,52 @@ class _NotifScreenState extends State<NotifScreen> {
                                     return SizedBox(
                                       height: 370,
                                       child: ListView.builder(
-                                        itemCount: 1,
+                                        itemCount: data.docs.length,
                                         itemBuilder: (context, index) {
-                                          return calculateDistance(
-                    lat,
-                    lng,
-                    double.parse(cardata['NODES']['Truck-01']['current']
-                            [cardata['NODES']['Truck-01']['current'].length - 1]
-                        .toString()
-                        .split(',')[0]),
-                    double.parse(cardata['NODES']['Truck-01']['current']
-                            [cardata['NODES']['Truck-01']['current'].length - 1]
-                        .toString()
-                        .split(',')[1])) > 10 ? const SizedBox() :  calculateDistance(
-                    lat,
-                    lng,
-                    double.parse(cardata['NODES']['Truck-01']['current']
-                            [cardata['NODES']['Truck-01']['current'].length - 1]
-                        .toString()
-                        .split(',')[0]),
-                    double.parse(cardata['NODES']['Truck-01']['current']
-                            [cardata['NODES']['Truck-01']['current'].length - 1]
-                        .toString()
-                        .split(',')[1])) <= 1 ? ListTile(
-                                            leading:
-                                                const Icon(Icons.notifications),
-                                            title: TextWidget(
-                                              align: TextAlign.start,
-                                                text:
-                                                    'Garbage Truck Collector is nearby please prepare your garbage.',
-                                                fontSize: 14),
-                                          )  :ListTile(
-                                            leading:
-                                                const Icon(Icons.notifications),
-                                            title: TextWidget(
-                                              align: TextAlign.start,
-                                                text:
-                                                    'Garbage Truck Collector has arrived in boundary please prepare your garbage”. Thank you',
-                                                fontSize: 14),
-                                          );
+                                          return !isSameDay(
+                                                  data.docs[index]['addedAt'])
+                                              ? const SizedBox()
+                                              : calculateDistance(
+                                                          lat,
+                                                          lng,
+                                                          double.parse(cardata['NODES']
+                                                                          ['Truck-01']
+                                                                      ['current'][
+                                                                  cardata['NODES']['Truck-01']['current'].length -
+                                                                      1]
+                                                              .toString()
+                                                              .split(',')[0]),
+                                                          double.parse(cardata['NODES']
+                                                                          ['Truck-01']
+                                                                      ['current']
+                                                                  [cardata['NODES']['Truck-01']['current'].length - 1]
+                                                              .toString()
+                                                              .split(',')[1])) >
+                                                      10
+                                                  ? const SizedBox()
+                                                  : calculateDistance(lat, lng, double.parse(cardata['NODES']['Truck-01']['current'][cardata['NODES']['Truck-01']['current'].length - 1].toString().split(',')[0]), double.parse(cardata['NODES']['Truck-01']['current'][cardata['NODES']['Truck-01']['current'].length - 1].toString().split(',')[1])) <= 1
+                                                      ? ListTile(
+                                                          leading: const Icon(
+                                                              Icons
+                                                                  .notifications),
+                                                          title: TextWidget(
+                                                              align: TextAlign
+                                                                  .start,
+                                                              text:
+                                                                  'Garbage Truck Collector is nearby please prepare your garbage.',
+                                                              fontSize: 14),
+                                                        )
+                                                      : ListTile(
+                                                          leading: const Icon(
+                                                              Icons
+                                                                  .notifications),
+                                                          title: TextWidget(
+                                                              align: TextAlign
+                                                                  .start,
+                                                              text:
+                                                                  'Garbage Truck Collector has arrived in boundary please prepare your garbage”. Thank you',
+                                                              fontSize: 14),
+                                                        );
                                         },
                                       ),
                                     );
@@ -231,6 +237,19 @@ class _NotifScreenState extends State<NotifScreen> {
               child: CircularProgressIndicator(),
             ),
     );
+  }
+
+  bool isSameDay(Timestamp timestamp) {
+    // Convert the timestamp to a DateTime
+    DateTime timestampDate = timestamp.toDate();
+
+    // Get the current date
+    DateTime currentDate = DateTime.now();
+
+    // Compare year, month, and day
+    return timestampDate.year == currentDate.year &&
+        timestampDate.month == currentDate.month &&
+        timestampDate.day == currentDate.day;
   }
 
   Future<Position> determinePosition() async {

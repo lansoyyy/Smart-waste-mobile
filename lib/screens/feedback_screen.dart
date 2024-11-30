@@ -396,14 +396,13 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
               const SizedBox(
                 height: 20,
               ),
-              Visibility(
-                visible: ischecked,
-                child: Center(
-                  child: ButtonWidget(
-                    radius: 15,
-                    color: primary,
-                    label: 'Submit',
-                    onPressed: () {
+              Center(
+                child: ButtonWidget(
+                  radius: 15,
+                  color: primary,
+                  label: 'Submit',
+                  onPressed: () {
+                    if (ischecked) {
                       if (box.read('submitted') == null ||
                           box.read('submitted') == 'null' ||
                           box.read('submitted') == false) {
@@ -424,8 +423,10 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                         showToast(
                             'You can only submit one feedback per day. Please try again tomorrow!');
                       }
-                    },
-                  ),
+                    } else {
+                      showToast('Please check the terms and condition first!');
+                    }
+                  },
                 ),
               ),
             ],

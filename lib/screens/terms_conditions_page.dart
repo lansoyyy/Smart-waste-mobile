@@ -25,7 +25,7 @@ class TermsAndConditionsPage extends StatelessWidget {
                 TextWidget(
                     align: TextAlign.start,
                     text: '''
-Welcome to the . Before using our services, please read and accept the following Terms and Conditions:\n
+Welcome to the Smart Solid Waste Collection.\nBefore using our services, please read and accept the following Terms and Conditions:\n
 1. Data Collection\n
 By using this service, you agree to provide the following personal information:
 Name

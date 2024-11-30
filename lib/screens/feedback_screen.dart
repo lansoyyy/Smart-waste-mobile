@@ -64,7 +64,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
 
   final nameController = TextEditingController();
   final emailController = TextEditingController();
-  final locationController = TextEditingController();
+
   final messageController = TextEditingController();
 
   bool ischecked = false;
@@ -72,6 +72,53 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
   final box = GetStorage();
 
   List images = [];
+
+  List names = [];
+
+  String? selectedBarangay;
+  final List<String> barangays = [
+    'Aglayan',
+    'Bangcud',
+    'Barangay 1',
+    'Barangay 2',
+    'Barangay 3',
+    'Barangay 4',
+    'Barangay 5',
+    'Barangay 6',
+    'Barangay 7',
+    'Barangay 8',
+    'Barangay 9',
+    'Barangay 10',
+    'Busdi',
+    'Cabangahan',
+    'Caburacanan',
+    'Can-ayan',
+    'Capitan Bayong',
+    'Casisang',
+    'Dalwangan',
+    'Indalasa',
+    'Kalasungay',
+    'Kibalabag',
+    'Kulaman',
+    'Laguitas',
+    'Linabo',
+    'Maligaya',
+    'Magsaysay (Panadtalan)',
+    'Managok',
+    'Mapayag',
+    'Mapulo',
+    'Miglamin',
+    'Patpat',
+    'Rizal (Poblacion)',
+    'San Jose',
+    'Santo Niño',
+    'Silae',
+    'Simaya',
+    'Sinanglanan',
+    'Sumpong',
+    'Violeta',
+    'Zamboanguita',
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -206,11 +253,42 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
               const SizedBox(
                 height: 10,
               ),
-              TextFieldWidget(
-                borderColor: Colors.black,
-                width: 500,
-                controller: locationController,
-                label: 'Location',
+              const Text(
+                'Location',
+                style: TextStyle(
+                  fontFamily: 'Bold',
+                  fontSize: 14,
+                  color: Colors.black,
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  border: Border.all(
+                    color: Colors.black,
+                  ),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Center(
+                  child: DropdownButton<String>(
+                    value: selectedBarangay,
+                    hint: const Text('Select a Barangay'),
+                    items: barangays.map((String barangay) {
+                      return DropdownMenuItem<String>(
+                        value: barangay,
+                        child: Text(barangay),
+                      );
+                    }).toList(),
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        selectedBarangay = newValue;
+                      });
+                    },
+                  ),
+                ),
               ),
               const SizedBox(
                 height: 10,
@@ -232,14 +310,18 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                             children: [
                               ListTile(
                                 onTap: () {
-                                  uploadPicture('camera');
+                                  if (images.length <= 2) {
+                                    uploadPicture('camera');
+                                  }
                                 },
                                 title: const Text('Camera'),
                                 trailing: const Icon(Icons.camera),
                               ),
                               ListTile(
                                 onTap: () {
-                                  uploadPicture('gallery');
+                                  if (images.length <= 2) {
+                                    uploadPicture('gallery');
+                                  }
                                 },
                                 title: const Text('Gallery'),
                                 trailing: const Icon(Icons.photo),
@@ -270,7 +352,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                               height: 25,
                               child: TextWidget(
                                 color: Colors.black,
-                                text: images[i],
+                                text: names[i],
                                 fontSize: 18,
                               ),
                             ),
@@ -314,33 +396,36 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
               const SizedBox(
                 height: 20,
               ),
-              Center(
-                child: ButtonWidget(
-                  radius: 15,
-                  color: primary,
-                  label: 'Submit',
-                  onPressed: () {
-                    if (box.read('submitted') == null ||
-                        box.read('submitted') == 'null' ||
-                        box.read('submitted') == false) {
-                      if (emailController.text != '' ||
-                          messageController.text != '' ||
-                          nameController.text != '') {
-                        addFeedback(
-                            emailController.text,
-                            messageController.text,
-                            nameController.text,
-                            images,
-                            locationController.text);
-                        showSubmittedDialog();
+              Visibility(
+                visible: ischecked,
+                child: Center(
+                  child: ButtonWidget(
+                    radius: 15,
+                    color: primary,
+                    label: 'Submit',
+                    onPressed: () {
+                      if (box.read('submitted') == null ||
+                          box.read('submitted') == 'null' ||
+                          box.read('submitted') == false) {
+                        if (emailController.text != '' ||
+                            messageController.text != '' ||
+                            nameController.text != '') {
+                          addFeedback(
+                              emailController.text,
+                              messageController.text,
+                              nameController.text,
+                              images,
+                              selectedBarangay);
+                          showSubmittedDialog();
+                        } else {
+                          showToast('Cannot proceed! All fields are required');
+                        }
                       } else {
-                        showToast('Cannot proceed! All fields are required');
+                        showToast(
+                            'You can only submit one feedback per day. Please try again tomorrow!');
                       }
-                    } else {
-                      showToast(
-                          'You can only submit one feedback per day. Please try again tomorrow!');
-                    }
-                  },
+                    },
+                  ),
                 ),
               ),
             ],
@@ -430,7 +515,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
               title: Row(
             children: [
               SizedBox(
-                height: 15,
+                height: 25,
                 child: CircularProgressIndicator(
                   color: Colors.black,
                 ),
@@ -449,13 +534,13 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
                         fontFamily: 'QRegular',
-                        fontSize: 12),
+                        fontSize: 16),
                   ),
                   Text(
                     'Please wait',
                     style: TextStyle(
                         color: Colors.black,
-                        fontSize: 10,
+                        fontSize: 14,
                         fontFamily: 'Regular'),
                   ),
                 ],
@@ -473,6 +558,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
           .getDownloadURL();
 
       setState(() {
+        names.add(fileName);
         images.add(imageURL);
       });
 

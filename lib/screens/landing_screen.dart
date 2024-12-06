@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:local_auth/local_auth.dart';
+import 'package:smart_waste_mobile/services/data.dart';
 import 'package:smart_waste_mobile/utlis/colors.dart';
 import 'package:smart_waste_mobile/widgets/button_widget.dart';
 import 'package:smart_waste_mobile/widgets/text_widget.dart';
@@ -67,7 +69,13 @@ class _LandingScreenState extends State<LandingScreen> {
                 radius: 15,
                 fontSize: 18,
                 label: 'Get Started',
-                onPressed: () {
+                onPressed: () async {
+                  // for (int i = 0; i < latLongData.length; i++) {
+                  //   await FirebaseFirestore.instance
+                  //       .collection('Collection Points')
+                  //       .doc()
+                  //       .set(latLongData[i]);
+                  // }
                   box.write('started', true);
                   box.write('toshow', true);
 

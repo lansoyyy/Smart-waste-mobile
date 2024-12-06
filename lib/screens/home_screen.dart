@@ -9,6 +9,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:smart_waste_mobile/screens/announcement_screen.dart';
 import 'package:smart_waste_mobile/screens/notif_screen.dart';
+import 'package:smart_waste_mobile/services/data.dart';
 import 'package:smart_waste_mobile/utlis/colors.dart';
 import 'package:smart_waste_mobile/utlis/distance_calculations.dart';
 import 'package:smart_waste_mobile/widgets/button_widget.dart';
@@ -297,6 +298,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                         snippet: 'Truck Location',
                                       ),
                                     ),
+                                    for (int i = 0; i < latLongData.length; i++)
+                                      Marker(
+                                        position: LatLng(
+                                            latLongData[i]['latitude'],
+                                            latLongData[i]['longitude']),
+                                        markerId: MarkerId(i.toString()),
+                                        infoWindow: InfoWindow(
+                                          title: 'Collection Point ${i + 1}',
+                                        ),
+                                      ),
                                   },
                                   polylines: {
                                     Polyline(

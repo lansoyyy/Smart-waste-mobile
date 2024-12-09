@@ -310,7 +310,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                             children: [
                               ListTile(
                                 onTap: () {
-                                  if (images.length <= 2) {
+                                  if (images.length <= 1) {
                                     uploadPicture('camera');
                                   }
                                 },
@@ -319,7 +319,7 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                               ),
                               ListTile(
                                 onTap: () {
-                                  if (images.length <= 2) {
+                                  if (images.length <= 1) {
                                     uploadPicture('gallery');
                                   }
                                 },
@@ -344,19 +344,18 @@ class _FeedbackScreenState extends State<FeedbackScreen> {
                   height: 100,
                   width: 500,
                   child: SingleChildScrollView(
-                    child: Column(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
                       children: [
                         for (int i = 0; i < images.length; i++)
-                          Card(
-                            child: SizedBox(
-                              height: 25,
-                              child: TextWidget(
-                                color: Colors.black,
-                                text: names[i],
-                                fontSize: 18,
-                              ),
+                          Padding(
+                            padding: const EdgeInsets.only(right: 10),
+                            child: Image.network(
+                              images[i],
+                              height: 100,
+                              width: 100,
                             ),
-                          )
+                          ),
                       ],
                     ),
                   )),
